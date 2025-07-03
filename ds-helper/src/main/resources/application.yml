@@ -1,0 +1,21 @@
+server:
+  port:8080
+
+spring:
+  application:
+    name:ds-helper
+  datasource:
+    url: jdbc:mysql://localhost:3306/ds_helper
+    username: root
+    password: gh15617110
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+kakao:
+  client:
+    id: edda215e7bcfbe5fe5d504c7039fe035
+    secret: 7myEWId37nBy6AvZmqTlmP5s1YTCZFRT
+  redirect:
+    uri: http://localhost:8080/oauth/kakao/verify-token
