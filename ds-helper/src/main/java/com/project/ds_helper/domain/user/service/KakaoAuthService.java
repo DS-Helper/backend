@@ -83,8 +83,6 @@ public class KakaoAuthService {
                                     log.info("nickname : {}", nickname);
                                     log.info("profileImageUrl : {}", profileImageUrl);
 
-
-
 //                                    String uuid = userResp.getPartner().getUuid();
 //                                    log.info("uuid : {}", uuid);
 
