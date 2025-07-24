@@ -1,6 +1,6 @@
 package com.project.ds_helper.domain.user.entity;
 
-import com.project.ds_helper.common.base.entity.BaseTime;
+import com.project.ds_helper.domain.entity.BaseTime;
 import com.project.ds_helper.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
