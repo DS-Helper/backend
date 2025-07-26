@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "tb_inquiry")
 @NoArgsConstructor
@@ -18,19 +20,20 @@ import lombok.Setter;
 @Setter
 public class Inquiry extends BaseTime {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "inquiry_id")
-    private Long id;
-
-    @Column(name = "title", nullable = false, length = 200)
-    private String title;
-
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+//    @Enumerated(EnumType.STRING)
+//    private InquiryType inquiryType = InquiryType.?;
+
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    private String content;
+
 
     @Enumerated(EnumType.STRING)
     private InquiryStatus status = InquiryStatus.UNANSWERED;

@@ -31,8 +31,4 @@ public class User extends BaseTime {
 
     @Column(name = "name")
     private String name; // 이름
-
-    @Column(name = "address")
-    private String address; // 주소
-
 }

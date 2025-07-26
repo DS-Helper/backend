@@ -66,25 +66,10 @@ public class KakaoAuthService {
                                     Long id = userResp.getId();
                                     String email = userResp.getKakaoAccount().getEmail();
                                     String name = userResp.getKakaoAccount().getName();
-                                    String gender = userResp.getKakaoAccount().getGender();
-                                    String ageRange = userResp.getKakaoAccount().getAgeRange();
-                                    String birthday = userResp.getKakaoAccount().getBirthday();
-                                    String birthyear = userResp.getKakaoAccount().getBirthyear();
                                     log.info("id : {}", userResp.getId());
                                     log.info("email : {}", email);
                                     log.info("name : {}", name);
-                                    log.info("gender : {}", gender);
-                                    log.info("ageRange : {}", ageRange);
-                                    log.info("birthday : {}", birthday);
-                                    log.info("birthyear : {}", birthyear);
 
-                                    String nickname = userResp.getKakaoAccount().getProfile().getNickname();
-                                    String profileImageUrl = userResp.getKakaoAccount().getProfile().getProfileImageUrl();
-                                    log.info("nickname : {}", nickname);
-                                    log.info("profileImageUrl : {}", profileImageUrl);
-
-//                                    String uuid = userResp.getPartner().getUuid();
-//                                    log.info("uuid : {}", uuid);
 
 //                                     (3) UserResponse 에서 이메일·닉네임 추출, DB 회원가입/조회 등 수행
 //                                     userService.registerOrGetUser(email, userResp.getKakaoAccount().getProfile().getNickname());
@@ -95,8 +80,7 @@ public class KakaoAuthService {
                                     // (5) 클라이언트가 쓸 수 있도록 토큰 리턴
                                     return ResponseEntity.ok(Map.of(
                                             "jwt",      jwt,
-                                            "kakaoAccount" , userResp.getKakaoAccount(),
-                                            "profile",  userResp.getKakaoAccount().getProfile()
+                                            "kakaoAccount" , userResp.getKakaoAccount()
                                     ));
                                 })
                 );

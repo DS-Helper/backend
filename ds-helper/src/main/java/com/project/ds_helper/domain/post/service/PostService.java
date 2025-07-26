@@ -27,6 +27,6 @@ public class PostService {
          * **/
         public ResponseEntity<?> createPost(Long userId, @Valid CreatePostReqDto dto) {
 
-
+                return null;
         }
 }
