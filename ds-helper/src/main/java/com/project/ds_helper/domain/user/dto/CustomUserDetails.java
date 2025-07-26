@@ -1,5 +1,6 @@
-package com.project.ds_helper.domain.user.entity;
+package com.project.ds_helper.domain.user.dto;
 
+import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,13 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
 
-    public String getId() {
+    public UUID getId() {
         return user.getId();
     }
 
@@ -27,7 +29,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return null;
+//                user.getPassword();
     }
 
 
@@ -38,7 +41,8 @@ public class CustomUserDetails implements UserDetails {
      * **/
     @Override
     public String getUsername() {
-        return user.getId();
+        return null;
+//                user.getId();
     }
 
     @Override
