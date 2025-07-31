@@ -19,22 +19,20 @@ import java.util.UUID;
 @Setter
 public class Post extends BaseTime {
 
-    @PrePersist
-    public void prePersist(){
-        this.id = String.valueOf(UUID.randomUUID());
-    }
 
-    @Id @Column(name = "post_id")
-    private String id;
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "post_id")
+    private UUID id;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "image_path")
-    private List<String> imagePath;
+    private List<String> imagePath; // 첫 번째 이미지 썸네일
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {})
     @JoinColumn(name = "writer_id")

@@ -18,15 +18,22 @@ import java.util.UUID;
 @Setter
 public class User extends BaseTime {
 
-    @PrePersist
-    private void GenerateUuid(){
-        this.id = String.valueOf(UUID.randomUUID()); // 저장 시 uuid 자동 생성
-    }
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
+    private UUID id; // 식별자 / UUID
 
+<<<<<<< HEAD
     @Id @Column(name = "user_id")
     private String id;
+=======
+    @Column(name = "email", nullable = false)
+    private String email; // 이메일
+>>>>>>> aeef5563d6c57abba5799a97f7a67dcb67edb121
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private UserRole role;
+    private UserRole role; // 권한
+
+    @Column(name = "name")
+    private String name; // 이름
 }

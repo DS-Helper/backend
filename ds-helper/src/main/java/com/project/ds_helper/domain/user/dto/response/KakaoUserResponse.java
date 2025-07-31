@@ -15,29 +15,29 @@ public class KakaoUserResponse {
 
     @Data
     public static class KakaoAccount {
-        private Profile profile;
+//        private Profile profile;
         private String email;
         private String name;
-        private String gender;
-        @JsonProperty(value = "age_range")
-        private String ageRange;
-        private String birthday;
-        private String birthyear;
+//        private String gender;
+//        @JsonProperty(value = "age_range")
+//        private String ageRange;
+//        private String birthday;
+//        private String birthyear;
         // … 기타 동의 정보
 
-        @Data
-        public static class Profile {
-            private String nickname;
-            @JsonProperty(value = "profile_image_url")
-            private String profileImageUrl;
+//        @Data
+//        public static class Profile {
+//            private String nickname;
+//            @JsonProperty(value = "profile_image_url")
+//            private String profileImageUrl;
             // …
-        }
+//        }
 
     }
 
-    @Data
-    public static class Partner {
-        @JsonProperty(value = "uuid")
-        private String uuid;
-    }
+//    @Data
+//    public static class Partner {
+//        @JsonProperty(value = "uuid")
+//        private String uuid;
+//    }
 }

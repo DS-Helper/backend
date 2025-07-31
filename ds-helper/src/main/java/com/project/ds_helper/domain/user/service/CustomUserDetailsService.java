@@ -1,6 +1,6 @@
 package com.project.ds_helper.domain.user.service;
 
-import com.project.ds_helper.domain.user.entity.CustomUserDetails;
+import com.project.ds_helper.domain.user.dto.CustomUserDetails;
 import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
