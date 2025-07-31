@@ -1,4 +1,4 @@
-package com.project.ds_helper.domain.entity;
+package com.project.ds_helper.domain.base.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;

@@ -1,6 +1,6 @@
 package com.project.ds_helper.domain.user.entity;
 
-import com.project.ds_helper.domain.entity.BaseTime;
+import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,12 +25,6 @@ public class User extends BaseTime {
 
     @Id @Column(name = "user_id")
     private String id;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "password")
-    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
