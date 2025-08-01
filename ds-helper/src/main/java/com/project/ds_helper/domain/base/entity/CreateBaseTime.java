@@ -1,4 +1,4 @@
-package com.project.ds_helper.common.base.entity;
+package com.project.ds_helper.domain.base.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
-public class BaseTime {
+public class CreateBaseTime {
 
     private LocalDateTime createdAt;
 

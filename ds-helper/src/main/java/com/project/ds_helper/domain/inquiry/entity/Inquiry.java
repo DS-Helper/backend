@@ -1,6 +1,6 @@
 package com.project.ds_helper.domain.inquiry.entity;
 
-import com.project.ds_helper.common.base.entity.BaseTime;
+import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.inquiry.enums.InquiryStatus;
 import com.project.ds_helper.domain.reply.entity.Reply;
 import com.project.ds_helper.domain.user.entity.User;
