@@ -22,11 +22,14 @@ import java.util.UUID;
 @Setter
 public class PersonalReservation extends BaseTime {
 
+    @PrePersist
+    private void perPersistGenerateId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "personal_reservation_id")
-    private UUID id; // 식별자 / UUID
+    private String id; // 식별자 / UUID
 
     @Column(name = "name")
     private String name;

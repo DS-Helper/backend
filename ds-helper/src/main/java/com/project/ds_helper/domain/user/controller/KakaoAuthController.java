@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.user.controller;
 
 import com.project.ds_helper.domain.user.service.KakaoAuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +18,18 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
     
     // XHR 요청 시 직접 redirect 가능
-    @GetMapping("/auth-token")
-    public ResponseEntity<?> getAuthToken(){
-        return kakaoAuthService.getAuthToken();
+    @GetMapping("/login-url")
+    public ResponseEntity<?>getKakaoLoginUrl(){
+        return kakaoAuthService.getKakaoLoginUrl();
     }
 
-    @GetMapping("/verify-token")
-    public Mono<ResponseEntity<?>> verifyToken(@RequestParam("code") String kakaoAuthToken){
-        return kakaoAuthService.verifyToken(kakaoAuthToken);
+    @GetMapping("/join")
+    public ResponseEntity<?> JoinWithKakaoOauthToken(@RequestParam("code") String kakaoAuthToken,
+                                                           HttpServletResponse httpServletResponse){
+        return kakaoAuthService.JoinWithKakaoOauthToken(kakaoAuthToken, httpServletResponse);
     }
 
-    @GetMapping("/checkResponse")
+    @GetMapping("/check-response")
     public Mono<String> checkResponse(@RequestParam("code") String kakaoAuthToken){ // ResponseEntity<?>
         return kakaoAuthService.checkResponseData(kakaoAuthToken);
     }

@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Profile;
 // 유저 정보 응답
 @Data
 public class KakaoUserResponse {
-    private Long id;
+    @JsonProperty(value = "id")
+    private Long socialOauthId;
     @JsonProperty(value = "kakao_account")
     private KakaoAccount kakaoAccount;
 //    @JsonProperty(value = "for_partner")

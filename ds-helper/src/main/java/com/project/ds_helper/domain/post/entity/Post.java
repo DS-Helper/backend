@@ -19,10 +19,14 @@ import java.util.UUID;
 @Setter
 public class Post extends BaseTime {
 
+    @PrePersist
+    private void perPersistGenerateId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Id
     @Column(name = "post_id")
-    private UUID id;
+    private String id;
 
     @Column(name = "title")
     private String title;

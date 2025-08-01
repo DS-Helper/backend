@@ -17,8 +17,12 @@ import java.util.UUID;
 @Setter
 public class OrganizationReservation extends BaseTime {
 
+    @PrePersist
+    private void perPersistGenerateId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "organization_reservation_id")
-    private UUID id; // 식별자 / UUID
+    private String id; // 식별자 / UUID
 }

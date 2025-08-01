@@ -18,9 +18,14 @@ import java.util.UUID;
 @Setter
 public class Reply {
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @PrePersist
+    private void perPersistGenerateId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
+
+    @Id
     @Column(name = "reply_id")
-    private UUID id;
+    private String id;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;

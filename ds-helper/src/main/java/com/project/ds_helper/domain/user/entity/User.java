@@ -1,13 +1,12 @@
 package com.project.ds_helper.domain.user.entity;
 
 import com.project.ds_helper.common.base.entity.BaseTime;
+import com.project.ds_helper.domain.user.enums.OauthType;
 import com.project.ds_helper.domain.user.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,20 +14,42 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
+@Builder
 public class User extends BaseTime {
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @PrePersist
+    private void perPersistGenerateId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
+
+    @Id
     @Column(name = "user_id")
-    private UUID id; // 식별자 / UUID
+    private String id; // 식별자 / UUID
 
     @Column(name = "email", nullable = false)
     private String email; // 이메일
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private UserRole role; // 권한
+    private UserRole role = UserRole.USER; // 권한
 
     @Column(name = "name")
     private String name; // 이름
+
+    @Builder.Default
+    @Column(name = "local_auth_connected")
+    private boolean localAuthConnected = false; // 자체 회원가입 여부
+
+    @Builder.Default
+    @Column(name = "kakao_oauth_connected")
+    private boolean kakaoOauthConnected = false; // 카카오 소셜 회원가입 여부
+
+    @Builder.Default
+    @Column(name = "google_oauth_connected")
+    private boolean googleOauthConnected = false; // 구글 소셜 회원가입 여부
+
+    @Builder.Default
+    @Column(name = "naver_oauth_connected")
+    private boolean naverOauthConnected = false; // 네이버 소셜 회원가입 여부
 }

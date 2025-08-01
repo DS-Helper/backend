@@ -20,9 +20,14 @@ import java.util.UUID;
 @Setter
 public class Inquiry extends BaseTime {
 
-    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @PrePersist
+    private void perPersistGenerateId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
+
+    @Id
     @Column(name = "inquiry_id")
-    private UUID id;
+    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {})
     @JoinColumn(name = "user_id", nullable = false)
