@@ -3,11 +3,9 @@ package com.project.ds_helper.domain.reservation.entity;
 import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.reservation.enums.RecipientGenderType;
 import com.project.ds_helper.domain.reservation.enums.ReservationStatus;
+import com.project.ds_helper.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class PersonalReservation extends BaseTime {
 
     @PrePersist
@@ -30,6 +29,10 @@ public class PersonalReservation extends BaseTime {
     @Column(name = "personal_reservation_id")
     private String id; // 식별자 / UUID
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(name = "name")
     private String name;
 
@@ -39,13 +42,16 @@ public class PersonalReservation extends BaseTime {
     @Column(name = "visit_date")
     private LocalDate visitDate;
 
-    @Column(name = "visit_time")
-    private LocalTime visitTime;
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
     @Column(name = "address")
     private String address; // 주소
 
-    @Column(name = "requirement")
+    @Column(name = "requirement", columnDefinition = "TEXT")
     private String requirement; // 요청 사항
 
     @Enumerated(EnumType.STRING)
@@ -53,10 +59,10 @@ public class PersonalReservation extends BaseTime {
     private RecipientGenderType recipientGender;
 
     @Column(name = "recipient_number")
-    private int recipientNumber; // 주소
+    private int recipientNumber; // 도움 받는 사람 수
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status")
-    private ReservationStatus reservationStatus; // 주소
+    private ReservationStatus reservationStatus; // 예약 상태
 
 }

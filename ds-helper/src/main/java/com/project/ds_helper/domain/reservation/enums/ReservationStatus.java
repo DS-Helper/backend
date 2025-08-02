@@ -1,7 +1,12 @@
 package com.project.ds_helper.domain.reservation.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ReservationStatus {
-     SCHEDULED("예정"),
+     REQUESTED("대기"),
+    ACCEPTED("수락"),
+    STARTED("시작"),
     COMPLETED("완료"),
     CANCELED("취소");
 
@@ -11,11 +16,7 @@ public enum ReservationStatus {
          this.korean = koraen;
      }
 
-     public String getKorean(){
-         return korean;
-     }
-    
-     // 한국어로 일치하는 status 찾기
+    // 한국어로 일치하는 status 찾기
      public ReservationStatus findStatusByString(String korean){
         for(ReservationStatus status : values()){
             if(status.getKorean().equals(korean)){
