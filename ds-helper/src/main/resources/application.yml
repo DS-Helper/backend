@@ -1,5 +1,11 @@
 server:
-  port:8080
+  port: 8080
+  url: https://lucid-expert.duckdns.org
+
+local:
+  port: 8080
+  url: http://localhost:8080
+
 
 spring:
   application:
@@ -13,9 +19,33 @@ spring:
       ddl-auto: update
     show-sql: true
 
+# swagger
+springdoc:
+  api-docs:
+    #    path: /v3/api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    path: /swagger # 루트 경로로 접근 시 swagger 경로 자동 라우팅
+    #    config-url: /v3/api-docs/swagger-config
+    #    url: /v3/api-docs
+    enabled: true
+    groups-order: asc
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+#    disable-swagger-default-url: true
+
+#mail url
+mail:
+  redirect:
+    url: http://localhost:8080
+
 kakao:
   client:
     id: edda215e7bcfbe5fe5d504c7039fe035
     secret: 7myEWId37nBy6AvZmqTlmP5s1YTCZFRT
   redirect:
     uri: http://localhost:8080/oauth/kakao/verify-token
+
