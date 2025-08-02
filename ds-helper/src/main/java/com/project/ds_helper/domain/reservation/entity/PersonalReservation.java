@@ -1,6 +1,6 @@
 package com.project.ds_helper.domain.reservation.entity;
 
-import com.project.ds_helper.common.base.entity.BaseTime;
+import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.reservation.enums.RecipientGenderType;
 import com.project.ds_helper.domain.reservation.enums.ReservationStatus;
 import jakarta.persistence.*;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
