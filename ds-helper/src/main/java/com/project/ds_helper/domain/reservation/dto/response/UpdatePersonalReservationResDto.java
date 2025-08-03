@@ -1,6 +1,8 @@
 package com.project.ds_helper.domain.reservation.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,12 +23,16 @@ public class UpdatePersonalReservationResDto {
 
     private String reservationHolder;
 
+    @JsonFormat(pattern = "^01[016789]-\\d{3,4}-\\d{4}$\n") // 하이픈 있는 상태만 허용
     private String reservationPhoneNumber;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate visitDate;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
 
     private String address;

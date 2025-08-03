@@ -53,4 +53,5 @@ public class User extends BaseTime {
     @Builder.Default
     @Column(name = "naver_oauth_connected")
     private boolean naverOauthConnected = false; // 네이버 소셜 회원가입 여부
+
 }

@@ -29,7 +29,7 @@ public class PersonalReservation extends BaseTime {
     @Column(name = "personal_reservation_id")
     private String id; // 식별자 / UUID
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 

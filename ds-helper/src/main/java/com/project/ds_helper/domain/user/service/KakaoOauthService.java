@@ -30,7 +30,7 @@ import java.util.Optional;
 @Service
 //@RequiredArgsConstructor
 @Slf4j
-public class KakaoAuthService {
+public class KakaoOauthService {
 
         @Value("${kakao.client.id}")
         private String clientId ;
@@ -44,12 +44,12 @@ public class KakaoAuthService {
         private final KakaoOauthRepository kakaoOauthRepository;
         private final UserRepository userRepository;
 
-        public KakaoAuthService(@Qualifier("kakaoOauthWebClient") WebClient kakaoOauthWebClient,
+        public KakaoOauthService(@Qualifier("kakaoOauthWebClient") WebClient kakaoOauthWebClient,
 //                                @Qualifier("kakaoOauthRestTemplate") RestTemplate restTemplate,
-                                RestTemplate restTemplate,
-                                JwtUtil jwtUtil,
-                                KakaoOauthRepository kakaoOauthRepository,
-                                UserRepository userRepository){
+                                 RestTemplate restTemplate,
+                                 JwtUtil jwtUtil,
+                                 KakaoOauthRepository kakaoOauthRepository,
+                                 UserRepository userRepository){
             this.kakaoOauthWebClient = kakaoOauthWebClient;
             this.restTemplate = restTemplate;
             this.jwtUtil = jwtUtil;
@@ -60,10 +60,14 @@ public class KakaoAuthService {
         @Transactional(readOnly = true)
     public ResponseEntity<?> getKakaoLoginUrl() {
             log.info("login-url-responded");
-        return ResponseEntity.ok("https://kauth.kakao.com/oauth/authorize?"
-                + "client_id=" + clientId
-                + "&redirect_uri=" + redirectUri
-                + "&response_type=code");
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("https://kauth.kakao.com/oauth/authorize?")
+                    .append("client_id=").append(clientId)
+                    .append("&redirect_uri=").append(redirectUri)
+                    .append("&response_type=code");
+
+        return ResponseEntity.ok(stringBuilder.toString());
 
 //        @GetMapping("/oauth2/authorize/kakao")
 //        public void redirectToKakao(HttpServletResponse res) throws IOException {
@@ -246,12 +250,6 @@ public class KakaoAuthService {
     
     
     
-    /** 응답 데이터 체크 **/
-    public Mono<String> checkResponseData(String code) {
-        log.info("kakaoAuthToken : {}", code);
 
-//         return fetchToken(code).map(res -> fetchUserInfo(res.getAccessToken()));
-         return null;
-    }
 
 }

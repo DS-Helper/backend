@@ -3,7 +3,10 @@ package com.project.ds_helper.domain.reservation.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,7 +15,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 @Getter
-public class CreatePersonalReservationResDto {
+public class GetPersonalReservationResDto {
 
     private String personalReservationId;
 
@@ -42,8 +45,8 @@ public class CreatePersonalReservationResDto {
 
     private String reservationStatus;
 
-    public static CreatePersonalReservationResDto toDto(PersonalReservation personalReservation){
-        return CreatePersonalReservationResDto.builder()
+    public static GetPersonalReservationResDto toDto(PersonalReservation personalReservation){
+        return GetPersonalReservationResDto.builder()
                 .personalReservationId(personalReservation.getId())
                 .personalReservationId(personalReservation.getUser().getId())
                 .reservationHolder(personalReservation.getName())
@@ -58,6 +61,5 @@ public class CreatePersonalReservationResDto {
                 .reservationStatus(personalReservation.getReservationStatus().getKorean())
                 .build();
     }
-
 
 }

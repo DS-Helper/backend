@@ -1,5 +1,6 @@
 package com.project.ds_helper.domain.reservation.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
 import com.project.ds_helper.domain.reservation.enums.RecipientGenderType;
 import com.project.ds_helper.domain.reservation.enums.ReservationStatus;
@@ -42,7 +43,7 @@ public class UpdatePersonalReservationReqDto {
 
     @NotBlank(message = "성별은 필수 입력 항목입니다.")
     private String recipientGenderType;
-
+@JsonFormat
     @NotNull
     @Min(value = 1)
     @Max(value = 100)
@@ -58,22 +59,17 @@ public class UpdatePersonalReservationReqDto {
 
     public PersonalReservation toPersonalReservation(PersonalReservation personalReservation, UpdatePersonalReservationReqDto dto){
 
-        
-        /**
-         *  추가 작업 필요
-         * **/
                 personalReservation.setName(dto.getName());
-        personalReservation.setPhoneNumber(dto.getPhoneNumber())
-                .visitDate(dto.getVisitDate())
-                .startTime(dto.getStartTime())
-                .endTime(dto.getEndTime())
-                .address(dto.getAddress())
-                .requirement(dto.checkRequirementNullAndReturnValue(dto.getRequirement()))
+                personalReservation.setPhoneNumber(dto.getPhoneNumber());
+                personalReservation.setVisitDate(dto.getVisitDate());
+                personalReservation.setStartTime(dto.getStartTime());
+                personalReservation.setEndTime(dto.getEndTime());
+                personalReservation.setAddress(dto.getAddress());
+                personalReservation.setRequirement(dto.checkRequirementNullAndReturnValue(dto.getRequirement()));
                 // 성별 체크
-                .recipientGender(RecipientGenderType.findTypeByKorean(dto.getRecipientGenderType()))
-                .recipientNumber(dto.getRecipientNumber())
-                .reservationStatus(ReservationStatus.REQUESTED)
-                .build();
+                personalReservation.setRecipientGender(RecipientGenderType.findTypeByKorean(dto.getRecipientGenderType()));
+                personalReservation.setRecipientNumber(dto.getRecipientNumber());
+                personalReservation.setReservationStatus(ReservationStatus.REQUESTED);
         return personalReservation;
     }
 }
