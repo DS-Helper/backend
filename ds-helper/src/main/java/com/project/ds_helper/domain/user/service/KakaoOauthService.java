@@ -2,6 +2,7 @@ package com.project.ds_helper.domain.user.service;
 
 import com.project.ds_helper.common.util.CookieUtil;
 import com.project.ds_helper.common.util.JwtUtil;
+import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.user.dto.response.KakaoTokenResponse;
 import com.project.ds_helper.domain.user.dto.response.KakaoUserResponse;
 import com.project.ds_helper.domain.user.entity.KakaoOauth;
@@ -101,7 +102,13 @@ public class KakaoOauthService {
                                     Long socialOauthId = kakaoUserResponse.getSocialOauthId();
                                     String email = kakaoUserResponse.getKakaoAccount().getEmail();
                                     String name = kakaoUserResponse.getKakaoAccount().getName();
-                                    log.info("socialOauthId : {}, email : {}, name : {}", socialOauthId, email, name);
+                                    String profileImageUrl = kakaoUserResponse.getKakaoAccount().getProfile().getProfileImageUrl();
+                                    String gender = kakaoUserResponse.getKakaoAccount().getGender();
+                                    String ageRange = kakaoUserResponse.getKakaoAccount().getAgeRange();
+                                    String birthday = kakaoUserResponse.getKakaoAccount().getBirthday();
+                                    String birthyear = kakaoUserResponse.getKakaoAccount().getBirthyear();
+                                    log.info("socialOauthId : {}, email : {}, name : {}, profileImageUrl : {}, gender : {}, ageRange : {}, birthday : {},birthyear : {},"
+                                            , socialOauthId, email, name, profileImageUrl, gender, ageRange, birthday, birthyear);
 
                                     // 카카오 회원가입 유무에 따른 처리 (socialOauthId, email)
                                     Optional<KakaoOauth> optionalKakaoOauth = kakaoOauthRepository.findBySocialOauthIdAndOauthEmail(socialOauthId, email);
@@ -128,6 +135,11 @@ public class KakaoOauthService {
                                         // 로컬 회원가입 미가입 신규 회원가입 처리
                                         User newUser = User.builder()
                                                 .name(name)
+                                                .profileImageUrl(profileImageUrl)
+                                                .gender(gender)
+                                                .ageRange(ageRange)
+                                                .birthday(birthday)
+                                                .birthyear(birthyear)
                                                 .build();
                                         log.info("newUser is built");
 
@@ -140,7 +152,6 @@ public class KakaoOauthService {
                                                 .user(user)
                                                 .socialOauthId(socialOauthId)
                                                 .oauthEmail(email)
-                                                .name(name)
                                                 .build();
                                         log.info("kakaoOauth is built");
 

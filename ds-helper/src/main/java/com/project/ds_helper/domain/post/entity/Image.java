@@ -1,12 +1,8 @@
 package com.project.ds_helper.domain.post.entity;
 
+import com.project.ds_helper.domain.base.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Entity
 @Table(name = "tb_image")
@@ -15,7 +11,7 @@ import java.io.InputStream;
 @Getter
 @Setter
 @Builder
-public class Image {
+public class Image extends BaseTime {
 
     /**
      *  식별자 직접 할당
@@ -42,7 +38,6 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {})
     @JoinColumn(name = "post_id")
     private Post post;
-
 
 
 

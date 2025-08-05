@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.user.entity;
 
 import com.project.ds_helper.domain.base.entity.BaseTime;
+import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,21 @@ public class User extends BaseTime {
 
     @Column(name = "name")
     private String name; // 이름
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "age_range")
+    private String ageRange;
+
+    @Column(name = "birthday")
+    private String birthday;
+
+    @Column(name = "birthyear")
+    private String birthyear;
 
     @Builder.Default
     @Column(name = "local_auth_connected")

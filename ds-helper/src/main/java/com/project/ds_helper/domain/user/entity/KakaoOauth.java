@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.user.entity;
 
 import com.project.ds_helper.domain.base.entity.BaseTime;
+import com.project.ds_helper.domain.post.entity.Image;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +34,8 @@ public class KakaoOauth extends BaseTime {
     @Column(name = "oauth_email")
     private String oauthEmail;
 
-    @Column(name = "name")
-    private String name;
+
+
+
 
 }
