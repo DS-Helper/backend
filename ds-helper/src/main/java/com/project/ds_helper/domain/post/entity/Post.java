@@ -38,4 +38,6 @@ public class Post extends BaseTime {
 
     @OneToMany(mappedBy = "post", targetEntity = Image.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL) // 연관관계 부모
     private List<Image> images;
+
+
 }

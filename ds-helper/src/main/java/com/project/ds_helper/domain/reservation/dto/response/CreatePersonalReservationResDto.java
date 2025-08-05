@@ -1,0 +1,63 @@
+package com.project.ds_helper.domain.reservation.dto.response;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class CreatePersonalReservationResDto {
+
+    private String personalReservationId;
+
+    private String reservationHolderId;
+
+    private String reservationHolder;
+
+    @JsonFormat(pattern = "^01[016789]-\\d{3,4}-\\d{4}$\n") // 하이픈 있는 상태만 허용
+    private String reservationPhoneNumber;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate visitDate;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime startTime;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime endTime;
+
+    private String address;
+
+    private String requirement;
+
+    private String recipientGender;
+
+    private int recipientNumber;
+
+    private String reservationStatus;
+
+    public static CreatePersonalReservationResDto toDto(PersonalReservation personalReservation){
+        return CreatePersonalReservationResDto.builder()
+                .personalReservationId(personalReservation.getId())
+                .personalReservationId(personalReservation.getUser().getId())
+                .reservationHolder(personalReservation.getName())
+                .reservationPhoneNumber(personalReservation.getPhoneNumber())
+                .visitDate(personalReservation.getVisitDate())
+                .startTime(personalReservation.getStartTime())
+                .endTime(personalReservation.getEndTime())
+                .address(personalReservation.getAddress())
+                .requirement(personalReservation.getRequirement())
+                .recipientGender(personalReservation.getRecipientGender().getKorean())
+                .recipientNumber(personalReservation.getRecipientNumber())
+                .reservationStatus(personalReservation.getReservationStatus().getKorean())
+                .build();
+    }
+
+
+}

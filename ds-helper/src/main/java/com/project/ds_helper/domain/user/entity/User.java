@@ -5,7 +5,6 @@ import com.project.ds_helper.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -52,4 +51,5 @@ public class User extends BaseTime {
     @Builder.Default
     @Column(name = "naver_oauth_connected")
     private boolean naverOauthConnected = false; // 네이버 소셜 회원가입 여부
+
 }

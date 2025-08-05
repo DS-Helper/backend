@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @OpenAPIDefinition(
-        info = @Info(title = "Lucid API 명세서",
+        info = @Info(title = "DS-Helper API 명세서",
                 version = "v1.0.0")
 )
 @Configuration
