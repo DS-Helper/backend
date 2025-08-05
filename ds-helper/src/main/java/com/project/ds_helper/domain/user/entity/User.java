@@ -1,6 +1,6 @@
 package com.project.ds_helper.domain.user.entity;
 
-import com.project.ds_helper.common.base.entity.BaseTime;
+import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.user.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,17 +13,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 public class User extends BaseTime {
 
     @PrePersist
-    private void perPersistGenerateId(){
+    private void prePersistGenerateId(){
         this.id = String.valueOf(UUID.randomUUID());
     }
 
     @Id
     @Column(name = "user_id")
-    private String id; // 식별자 / UUID
+    private String id; // 식별자
 
     @Column(name = "email", nullable = false)
     private String email; // 이메일

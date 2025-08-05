@@ -3,10 +3,7 @@ package com.project.ds_helper.domain.post.entity;
 import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Post extends BaseTime {
 
     @PrePersist
@@ -34,12 +32,10 @@ public class Post extends BaseTime {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "image_path")
-    private List<String> imagePath; // 첫 번째 이미지 썸네일
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {})
-    @JoinColumn(name = "writer_id")
-    private User writer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @OneToMany(mappedBy = "post", targetEntity = Image.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL) // 연관관계 부모
+    private List<Image> images;
 }
