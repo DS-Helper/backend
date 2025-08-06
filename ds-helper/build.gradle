@@ -66,8 +66,16 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	compileOnly 'org.projectlombok:lombok'
 
-	//swagger
+	// SWAGGER
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// SPRING CLOUD FOR S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE' // (v3.x는 별도 모듈)
+
+	// S3
+//	implementation platform('software.amazon.awssdk:bom:2.27.21')
+	implementation 'software.amazon.awssdk:s3:2.25.32' // AWS SDK v2 (최신)
+
 
 	/** TEST */
 	testImplementation 'org.springframework.security:spring-security-test'

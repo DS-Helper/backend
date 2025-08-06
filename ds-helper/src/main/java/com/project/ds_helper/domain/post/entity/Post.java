@@ -36,8 +36,10 @@ public class Post extends BaseTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post", targetEntity = Image.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL) // 연관관계 부모
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL) // 연관관계 부모
     private List<Image> images;
+
+
 
 
 }

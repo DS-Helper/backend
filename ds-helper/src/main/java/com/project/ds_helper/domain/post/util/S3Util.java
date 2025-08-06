@@ -1,0 +1,78 @@
+package com.project.ds_helper.domain.post.util;
+
+import com.project.ds_helper.domain.post.entity.Image;
+import com.project.ds_helper.domain.user.entity.User;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Component
+@RequiredArgsConstructor
+public class S3Util {
+
+    @Value("${cloud.aws.credentials.access-key}")
+    private static String accessKey;
+    @Value("${cloud.aws.credentials.secret-key}")
+    private static String secretKey;
+    @Value("${cloud.aws.region.static}")
+    private static String region;
+    @Value("${s3.bucket}")
+    private static String bucket;
+
+    private S3Client s3Client;
+
+    // 생성 시 설정 세팅
+    @PostConstruct
+    public void init() {
+        s3Client = S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(
+                        StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create(accessKey, secretKey)))
+                .build();
+    }
+
+    public String upload(MultipartFile file, User user) throws IOException {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("파일이 없습니다. 요청 유저 ID : " + user.getId());
+        }
+        String filename = "img/"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                + "_" + URLEncoder.encode(file.getOriginalFilename(), StandardCharsets.UTF_8);
+
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(filename)
+                .contentType(file.getContentType())
+                .acl("public-read") // 공개 버킷이면
+                .build();
+
+        s3Client.putObject(request, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+
+        return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
+    }
+
+    public static String toUrl(MultipartFile file, User user){
+        if(file.isEmpty()){
+            throw new IllegalArgumentException("파일이 없습니다. 요청 유저 ID : " + user.getId());
+        }
+        String filename = "img/"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                + "_" + URLEncoder.encode(file.getOriginalFilename(), StandardCharsets.UTF_8);
+
+        return "https://" + bucket + ".s3." + region + ".amazonaws.com" + filename;
+    }
+}

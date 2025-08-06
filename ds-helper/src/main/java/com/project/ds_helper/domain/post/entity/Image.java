@@ -4,6 +4,8 @@ import com.project.ds_helper.domain.base.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "tb_image")
 @NoArgsConstructor
@@ -12,6 +14,11 @@ import lombok.*;
 @Setter
 @Builder
 public class Image extends BaseTime {
+
+    @PrePersist
+    public void generatedId(){
+        this.id = String.valueOf(UUID.randomUUID());
+    }
 
     /**
      *  식별자 직접 할당
@@ -35,9 +42,7 @@ public class Image extends BaseTime {
     @Column(name = "content_type")
     private String contentType; // 확장자
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {})
-    @JoinColumn(name = "post_id")
-    private Post post;
+
 
 
 
