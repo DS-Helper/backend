@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.post.util;
 
 import com.project.ds_helper.domain.post.entity.Image;
+import com.project.ds_helper.domain.post.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class ImageUtil {
 
     private final S3Util s3Util;
+    private final ImageRepository imageRepository;
 
     /**
      * 이미지 엔티티 빌드
@@ -46,6 +48,18 @@ public class ImageUtil {
                     + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                     + "_" + URLEncoder.encode(Objects.requireNonNull(image.getOriginalFilename()), StandardCharsets.UTF_8);
     }
+
+//    /**
+//     *
+//     * **/
+//    public String toImageUrl(MultipartFile image){
+//        if(image.isEmpty()){
+//            throw new IllegalArgumentException("파일이 없습니다.");
+//        }
+//        return "/image/"
+//                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+//                + "_" + URLEncoder.encode(Objects.requireNonNull(image.getOriginalFilename()), StandardCharsets.UTF_8);
+//    }
 
 
 }
