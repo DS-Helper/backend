@@ -49,9 +49,8 @@ public class S3Util {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("파일이 없습니다. 요청 유저 ID : " + user.getId());
         }
-        String filename = "img/"
-                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
-                + "_" + URLEncoder.encode(file.getOriginalFilename(), StandardCharsets.UTF_8);
+
+        String filename = toUrl(file);
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucket)
@@ -65,14 +64,14 @@ public class S3Util {
         return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
     }
 
-    public static String toUrl(MultipartFile file, User user){
+    public static String toUrl(MultipartFile file){
         if(file.isEmpty()){
-            throw new IllegalArgumentException("파일이 없습니다. 요청 유저 ID : " + user.getId());
+            throw new IllegalArgumentException("파일이 없습니다.");
         }
-        String filename = "img/"
+        String filename = "image/"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                 + "_" + URLEncoder.encode(file.getOriginalFilename(), StandardCharsets.UTF_8);
 
-        return "https://" + bucket + ".s3." + region + ".amazonaws.com" + filename;
+        return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
     }
 }
