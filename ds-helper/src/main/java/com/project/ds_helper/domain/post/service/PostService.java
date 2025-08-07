@@ -3,6 +3,7 @@ package com.project.ds_helper.domain.post.service;
 import com.project.ds_helper.common.exception.user.UserNotFoundException;
 import com.project.ds_helper.common.util.UserUtil;
 import com.project.ds_helper.domain.post.dto.request.CreatePostReqDto;
+import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
 import com.project.ds_helper.domain.post.dto.response.GetPostResDto;
 import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.post.entity.Post;
@@ -70,5 +71,12 @@ public class PostService {
 
             return GetPostResDto.toDto(post);
         }
-
+    
+        /**
+         * 게시글 수정
+         * 이미지 리스트 수정 기능 확인
+         * **/
+        public void updatePost(Authentication authentication, UpdatePostReqDto dto) {
+            
+        }
 }

@@ -35,7 +35,7 @@ public class UpdatePostReqDto {
         return Post.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .user(user)
+                .user(post.getUser())
                 .images(images)
                 .build();
     }

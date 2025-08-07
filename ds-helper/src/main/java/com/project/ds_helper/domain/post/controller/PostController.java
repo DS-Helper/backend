@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.post.controller;
 
 import com.project.ds_helper.domain.post.dto.request.CreatePostReqDto;
+import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
 import com.project.ds_helper.domain.post.dto.response.GetPostResDto;
 import com.project.ds_helper.domain.post.service.PostService;
 import jakarta.validation.Valid;
