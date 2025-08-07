@@ -9,6 +9,7 @@
 - 카카오 회원가입 / 로그인 ✅
 - 
 ## Post
+- url 체계 : Global FileUtil(imageUrl) -> S3util(s3ImageUrl)
 
 ## Inquiry
 

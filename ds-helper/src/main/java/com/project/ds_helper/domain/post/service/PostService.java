@@ -10,6 +10,7 @@ import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.post.entity.Post;
 import com.project.ds_helper.domain.post.repository.PostRepository;
 import com.project.ds_helper.domain.post.util.ImageUtil;
+import com.project.ds_helper.domain.post.util.S3Util;
 import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class PostService {
         private final UserUtil userUtil;
         private final ImageUtil imageUtil;
         private final PostUtil postUtil;
+        private final S3Util s3Util;
 
         
         /**
@@ -95,17 +97,20 @@ public class PostService {
     
             // 게시글 조회
             Post post = postUtil.findPostById(postId);
-        
+
             // 게시글 작성자가 아니면 삭제 불가능 예외 처리
             if(!userId.equals(post.getUser().getId())){
                 throw new IllegalArgumentException("게시글 작성자가 아닙니다. 유저 ID : " + userId + "게시글 ID : " + postId);
             }
-            
+
+            // 게시글 삭제 전 삭제할 이미지 경로 확보를 위해 이미지 리스트 변수에 할당
+            List<String> imageUrlsToDelete = post.getImages().stream().map(image -> s3Util.toS3Url(image.getUrl())).toList();
+
             // 게시글 삭제
             postUtil.deletePostById(postId);
 
             // 이미지 삭제
-
+            s3Util.deleteImages(imageUrlsToDelete);
         }
 
 }

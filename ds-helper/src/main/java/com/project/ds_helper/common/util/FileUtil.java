@@ -6,7 +6,16 @@ import com.project.ds_helper.domain.post.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +31,17 @@ public class FileUtil {
      * Post의 이미지 리스트 갱신
      */
     public static boolean deleteImage(Image image){
-
+         return false;
     }
-    
+
+
+
+    public String toImageUrl(MultipartFile image){
+        if(image.isEmpty()){
+            throw new IllegalArgumentException("파일이 없습니다.");
+        }
+        return "/image/"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                + "_" + URLEncoder.encode(Objects.requireNonNull(image.getOriginalFilename()), StandardCharsets.UTF_8);
+    }
 }

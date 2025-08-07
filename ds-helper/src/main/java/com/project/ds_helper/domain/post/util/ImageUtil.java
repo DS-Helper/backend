@@ -20,7 +20,6 @@ import java.util.Objects;
 public class ImageUtil {
 
     private final S3Util s3Util;
-    private final ImageUtil imageUtil;
 
     /**
      * 이미지 엔티티 빌드
@@ -30,8 +29,8 @@ public class ImageUtil {
         if(!images.isEmpty()) {
             images.stream().peek( image -> result.add(Image.builder()
                     .originalName(image.getOriginalFilename())
-                    .storedName(FileUtil.toStoredFilename(image))
-                    .url(s3Util.toS3Url(imageUtil.toImageUrl(image)))
+                    .storedName(this.toStoredFilename(image))
+                    .url(s3Util.toS3Url(this.toStoredFilename(image)))
                     .size(image.getSize())
                     .contentType(image.getContentType())
                     .build()));
@@ -39,7 +38,7 @@ public class ImageUtil {
         return result;
     }
 
-    public String toImageUrl(MultipartFile image){
+    public String toStoredFilename(MultipartFile image){
             if(image.isEmpty()){
                 throw new IllegalArgumentException("파일이 없습니다.");
             }

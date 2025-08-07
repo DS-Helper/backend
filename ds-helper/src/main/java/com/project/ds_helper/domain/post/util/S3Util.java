@@ -14,9 +14,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -53,33 +51,54 @@ public class S3Util {
                 .build();
     }
 
-    public String upload(MultipartFile file, User user) throws IOException {
+    public void uploadImage(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("파일이 없습니다. 요청 유저 ID : " + user.getId());
+            throw new IllegalArgumentException("파일이 없습니다.");
         }
 
-        String filename = toUrl(file);
+        String imageUrl = toS3Url(imageUtil.toStoredFilename(file));
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucket)
-                .key(filename)
+                .key(imageUrl)
                 .contentType(file.getContentType())
                 .acl("public-read") // 공개 버킷이면
                 .build();
 
-        s3Client.putObject(request, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
-
-        return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + filename;
+         if(!s3Client.putObject(request, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes())).sdkHttpResponse().isSuccessful()){
+             throw new IOException("S3 이미지 저장 실패");
+         }
     }
+    
+    /**
+     * 복수개 이미지 업로드
+     * **/
 
-    public void deleteImages(List<Image> images){
-        if (images.isEmpty()) {
-            log.info("삭제할 이미지가 없습니다.");
-            throw new IllegalArgumentException("삭제할 이미지가 없습니다.");
+    public void uploadImages(List<MultipartFile> imageFiles) throws IOException {
+        if (imageFiles.isEmpty()) {
+            throw new IllegalArgumentException("파일이 없습니다.");
         }
 
-        if(images.size() == 1){
-            String imageUrl = images.getFirst().getUrl();
+        for(MultipartFile imageFile : imageFiles){
+            PutObjectRequest request = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(toS3Url(imageUtil.toStoredFilename(imageFile)))
+                    .contentType(imageFile.getContentType())
+                    .acl("public-read") // 공개 버킷이면
+                    .build();
+
+            if(!s3Client.putObject(request, software.amazon.awssdk.core.sync.RequestBody.fromBytes(imageFile.getBytes())).sdkHttpResponse().isSuccessful()){
+                throw new IOException("S3 이미지 저장 실패");
+            }
+        }
+    }
+
+
+    public void deleteImage(String imageUrl){
+        if (imageUrl.isEmpty()) {
+            log.info("삭제할 이미지 경로가 없습니다.");
+            throw new IllegalArgumentException("삭제할 이미지 경로가 없습니다.");
+        }
 
             DeleteObjectRequest request = DeleteObjectRequest.builder()
                     .bucket(bucket)
@@ -89,14 +108,23 @@ public class S3Util {
             if(!s3Client.deleteObject(request).deleteMarker()){
                 throw new OperationInProgressException("이미지 삭제 실패. 이미지 URL : " + toS3Url(imageUrl) );
             };
+    }
+
+    public void deleteImages(List<String> imageUrls){
+        if(imageUrls.isEmpty()){
+            log.info("삭제할 이미지 경로가 없습니다.");
         }
 
+        List<ObjectIdentifier> objectIdentifiers = imageUrls.stream().map( imageUrl -> ObjectIdentifier.builder().key(imageUrl).build()).toList();
 
+        Delete delete = Delete.builder().objects(objectIdentifiers).build();
 
+        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder().delete(delete).build();
 
-
-
+        s3Client.deleteObjects(deleteObjectsRequest);
     }
+
+
 
 
     public String toS3Url(String imageUrl){

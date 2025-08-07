@@ -1,14 +1,9 @@
 package com.project.ds_helper.domain.post.entity;
 
 import com.project.ds_helper.domain.base.entity.BaseTime;
-import com.project.ds_helper.domain.post.util.FileUtil;
-import com.project.ds_helper.domain.post.util.S3Util;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
