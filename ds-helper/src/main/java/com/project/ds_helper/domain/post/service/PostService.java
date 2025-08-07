@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.post.service;
 
 import com.project.ds_helper.common.exception.user.UserNotFoundException;
+import com.project.ds_helper.common.util.PostUtil;
 import com.project.ds_helper.common.util.UserUtil;
 import com.project.ds_helper.domain.post.dto.request.CreatePostReqDto;
 import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
@@ -34,6 +35,7 @@ public class PostService {
         private final UserRepository userRepository;
         private final UserUtil userUtil;
         private final ImageUtil imageUtil;
+        private final PostUtil postUtil;
 
         
         /**
@@ -79,4 +81,31 @@ public class PostService {
         public void updatePost(Authentication authentication, UpdatePostReqDto dto) {
             
         }
+        /**
+         * 게시글 삭제 
+         * S3 이미지 삭제
+         * **/
+        public void deletePost(Authentication authentication, String postId) {
+            
+            // 유저 id 조회
+            String userId = userUtil.extractUserId(authentication);
+        
+            // 유저 조회
+            User user = userUtil.findUserById(userId);
+    
+            // 게시글 조회
+            Post post = postUtil.findPostById(postId);
+        
+            // 게시글 작성자가 아니면 삭제 불가능 예외 처리
+            if(!userId.equals(post.getUser().getId())){
+                throw new IllegalArgumentException("게시글 작성자가 아닙니다. 유저 ID : " + userId + "게시글 ID : " + postId);
+            }
+            
+            // 게시글 삭제
+            postUtil.deletePostById(postId);
+
+            // 이미지 삭제
+
+        }
+
 }

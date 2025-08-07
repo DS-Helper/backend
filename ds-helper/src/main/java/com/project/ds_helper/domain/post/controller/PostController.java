@@ -40,5 +40,11 @@ public class PostController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(Authentication authentication,
+                                        @PathVariable("postId") String postId){
+        postService.deletePost(authentication, postId);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
 
 }
