@@ -29,25 +29,14 @@ public class CreatePostReqDto {
     @Size(max = 30)
     private List<MultipartFile> images;
 
-    public static Post toPost(CreatePostReqDto dto, User user){
+    public Post toPost(CreatePostReqDto dto, User user, List<Image> images){
         return Post.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .user(user)
-                .images(toImages(dto.getImages(), user))
+                .images(images)
                 .build();
     }
 
-    public static List<Image> toImages(List<MultipartFile> images, User user){
-        if(!images.isEmpty()) {
-            return images.stream().map( image -> Image.builder()
-                    .originalName(image.getOriginalFilename())
-                    .storedName(FileUtil.toStoredFilename(image))
-                    .url(S3Util.toUrl(image, user))
-                    .size(image.getSize())
-                    .contentType(image.getContentType())
-                    .build()).toList();
-        }
-        return new ArrayList<Image>();
-    }
+
 }

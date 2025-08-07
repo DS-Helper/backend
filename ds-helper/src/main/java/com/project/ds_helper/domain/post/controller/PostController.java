@@ -1,10 +1,13 @@
 package com.project.ds_helper.domain.post.controller;
 
 import com.project.ds_helper.domain.post.dto.request.CreatePostReqDto;
+import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
 import com.project.ds_helper.domain.post.dto.response.GetPostResDto;
 import com.project.ds_helper.domain.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Update;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +29,22 @@ public class PostController {
     @PostMapping("")
     public ResponseEntity<?> createPost(Authentication authentication,
                                         @RequestBody @Valid CreatePostReqDto dto){
-        return postService.createPost(authentication, dto);
+        postService.createPost(authentication, dto);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
+
+    @PutMapping("")
+    public ResponseEntity<?> updatePost(Authentication authentication,
+                                        @RequestBody @Valid UpdatePostReqDto dto){
+        postService.updatePost(authentication, dto);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(Authentication authentication,
+                                        @PathVariable("postId") String postId){
+        postService.deletePost(authentication, postId);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
 }

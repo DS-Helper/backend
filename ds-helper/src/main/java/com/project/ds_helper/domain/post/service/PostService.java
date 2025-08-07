@@ -1,10 +1,15 @@
 package com.project.ds_helper.domain.post.service;
 
 import com.project.ds_helper.common.exception.user.UserNotFoundException;
+import com.project.ds_helper.common.util.PostUtil;
+import com.project.ds_helper.common.util.UserUtil;
 import com.project.ds_helper.domain.post.dto.request.CreatePostReqDto;
+import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
 import com.project.ds_helper.domain.post.dto.response.GetPostResDto;
+import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.post.entity.Post;
 import com.project.ds_helper.domain.post.repository.PostRepository;
+import com.project.ds_helper.domain.post.util.ImageUtil;
 import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -19,6 +24,8 @@ import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -26,14 +33,30 @@ public class PostService {
 
         private final PostRepository postRepository;
         private final UserRepository userRepository;
+        private final UserUtil userUtil;
+        private final ImageUtil imageUtil;
+        private final PostUtil postUtil;
 
         
         /**
          * 신규 게시글 작성
+         * 반환 타입 수정 필요
          * **/
-        public ResponseEntity<?> createPost(Authentication authentication, CreatePostReqDto dto) {
+        public void createPost(Authentication authentication, CreatePostReqDto dto) {
 
-                return null;
+            // 유저 id 추출
+            String userId = userUtil.extractUserId(authentication);
+
+            User user = userUtil.findUserById(userId);
+
+            List<Image> images = imageUtil.toImages(dto.getImages());
+            log.info("이미지 엔티티 리스트 빌드 완료");
+
+            Post post = dto.toPost(dto, user, images);
+            log.info("게시글 엔티티 빌드 완료");
+            
+            postRepository.save(post);
+            log.info("게시글 저장");
         }
         
         /**
@@ -41,15 +64,48 @@ public class PostService {
          * **/
         public GetPostResDto getOnePost(Authentication authentication, String postId) {
 
-                String userId = authentication.getPrincipal().toString();
-                log.info("userId : {}", userId);
+            // 유저 id 추출
+            userUtil.extractUserId(authentication);
+            
+            // 게시글 조회
+            Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시물 조회 실패, 게시물 ID : " + postId));
+            log.info("게시글 조회 완료");
 
-               User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("유저를 찾지 못했습니다. 유저 ID : " + userId));
-               log.info("유저 조회 완료");
-
-               Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시물 조회 실패, 게시물 ID : " + postId));
-               log.info("게시글 조회 완료");
-
-               return GetPostResDto.toDto(post);
+            return GetPostResDto.toDto(post);
         }
+    
+        /**
+         * 게시글 수정
+         * 이미지 리스트 수정 기능 확인
+         * **/
+        public void updatePost(Authentication authentication, UpdatePostReqDto dto) {
+            
+        }
+        /**
+         * 게시글 삭제 
+         * S3 이미지 삭제
+         * **/
+        public void deletePost(Authentication authentication, String postId) {
+            
+            // 유저 id 조회
+            String userId = userUtil.extractUserId(authentication);
+        
+            // 유저 조회
+            User user = userUtil.findUserById(userId);
+    
+            // 게시글 조회
+            Post post = postUtil.findPostById(postId);
+        
+            // 게시글 작성자가 아니면 삭제 불가능 예외 처리
+            if(!userId.equals(post.getUser().getId())){
+                throw new IllegalArgumentException("게시글 작성자가 아닙니다. 유저 ID : " + userId + "게시글 ID : " + postId);
+            }
+            
+            // 게시글 삭제
+            postUtil.deletePostById(postId);
+
+            // 이미지 삭제
+
+        }
+
 }

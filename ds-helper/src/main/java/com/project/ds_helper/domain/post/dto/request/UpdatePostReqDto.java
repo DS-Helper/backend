@@ -21,6 +21,9 @@ import java.util.List;
 public class UpdatePostReqDto {
 
     @NotBlank
+    private String postId;
+
+    @NotBlank
     private String title;
 
     @NotBlank
@@ -29,13 +32,17 @@ public class UpdatePostReqDto {
     @Size(max = 30)
     private List<MultipartFile> images;
 
-    public static Post toUpdatedPost(Post post, UpdatePostReqDto dto){
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        post.setImages();
 
-        return post;
+    public Post toUpdatedPost(UpdatePostReqDto dto, Post post,  List<Image> images){
+    // 수정 필요
+        return Post.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .user(post.getUser())
+                .images(images)
+                .build();
     }
+
 
     public static List<Image> toImages(List<MultipartFile> images, User user){
         if(!images.isEmpty()) {
