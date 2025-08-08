@@ -5,10 +5,7 @@ import com.project.ds_helper.domain.inquiry.enums.InquiryStatus;
 import com.project.ds_helper.domain.reply.entity.Reply;
 import com.project.ds_helper.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -18,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Inquiry extends BaseTime {
 
     @PrePersist
@@ -39,7 +37,7 @@ public class Inquiry extends BaseTime {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private InquiryStatus status = InquiryStatus.UNANSWERED;
 

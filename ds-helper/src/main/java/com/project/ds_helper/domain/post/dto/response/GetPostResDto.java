@@ -23,7 +23,7 @@ public class GetPostResDto {
 
     private String writerName;
 
-    private List<String> images;
+    private List<String> imageUrls;
 
     public static GetPostResDto toDto(Post post){
         return GetPostResDto.builder()
@@ -31,7 +31,7 @@ public class GetPostResDto {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .writerName(post.getUser().getName())
-                .images(post.getImages().stream().map(Image::getUrl).toList())
+                .imageUrls(post.getImages().stream().map(Image::getUrl).toList())
                 .build();
     }
 

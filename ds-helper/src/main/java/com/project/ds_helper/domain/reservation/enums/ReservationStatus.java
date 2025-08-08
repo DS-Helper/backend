@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ReservationStatus {
      REQUESTED("대기"),
-    ACCEPTED("수락"),
-    STARTED("시작"),
+//    ACCEPTED("수락"),
+//    STARTED("시작"),
     COMPLETED("완료"),
     CANCELED("취소");
 
