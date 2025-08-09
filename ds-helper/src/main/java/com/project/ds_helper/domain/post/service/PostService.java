@@ -43,7 +43,33 @@ public class PostService {
         private final PostUtil postUtil;
         private final S3Util s3Util;
 
-        
+        /**
+         * 유저의 모든 게시글 조회
+         * **/
+        public List<GetPostResDto> getAllPostOfUser(Authentication authentication) {
+
+            // 유저 id 추출
+            String userId = userUtil.extractUserId(authentication);
+
+            // 게시글 리스트 조회
+            List<GetPostResDto> posts = postRepository.findAllByUser_Id(userId);
+            log.info("게시글 리스트 조회");
+
+            return posts;
+        }
+
+        /**
+         * 단건 게시물 조회
+         * **/
+        public GetPostResDto getOnePost(Authentication authentication, String postId) {
+
+            // 게시글 조회
+            GetPostResDto responseDto = GetPostResDto.toDto(postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시물 조회 실패, 게시물 ID : " + postId)));
+            log.info("게시글 조회 완료");
+
+            return responseDto;
+        }
+
         /**
          * 신규 게시글 작성
          * 반환 타입 수정 필요
@@ -54,16 +80,21 @@ public class PostService {
             // 유저 id 추출
             String userId = userUtil.extractUserId(authentication);
 
+            // 유저 조회
             User user = userUtil.findUserById(userId);
 
+            // 이미지 엔티티 빌드
             List<Image> images = imageUtil.toImages(dto.getImages());
             log.info("이미지 엔티티 리스트 빌드 완료");
 
+            // 이미지 저장 (CascadeType.ALL 이지만, 안정성을 위해 직접 저장)
             List<Image> savedImages = imageRepository.saveAll(images);
 
+            // 게시글 엔티티 빌드
             Post post = dto.toPost(dto, user, savedImages);
             log.info("게시글 엔티티 빌드 완료");
             
+            // 게시글 저장
             postRepository.save(post);
             log.info("게시글 저장");
 
@@ -72,31 +103,21 @@ public class PostService {
         }
         
         /**
-         * 단건 게시물 조회
-         * **/
-        @Transactional(readOnly = true)
-        public GetPostResDto getOnePost(Authentication authentication, String postId) {
-
-            // 유저 id 추출
-            userUtil.extractUserId(authentication);
-            
-            // 게시글 조회
-            Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시물 조회 실패, 게시물 ID : " + postId));
-            log.info("게시글 조회 완료");
-
-            return GetPostResDto.toDto(post);
-        }
-    
-        /**
          * 게시글 수정
          * 이미지 리스트 수정 기능 확인
+         * Dto 수정 필요 (프론트측 답변 오면 )
          * **/
         @Transactional
         public void updatePost(Authentication authentication, UpdatePostReqDto dto) {
-    
+
+            // 게시글 작성자가 아니면 예외
+            // 삭제, 신규 추가 된 이미지 처리
+            // s3 이미지 처리
+
+
             // 유저 id 추출
             String userId = userUtil.extractUserId(authentication);
-        
+
             // 유저 조회
             User user = userUtil.findUserById(userId);
 
@@ -109,7 +130,7 @@ public class PostService {
                  * 추후 수정 필요
                  * **/
 //            dto.toUpdatedPost(post, dto);
-            
+
         }
         /**
          * 게시글 삭제 
@@ -141,5 +162,6 @@ public class PostService {
             // 이미지 삭제
             s3Util.deleteImages(imageUrlsToDelete);
         }
+
 
 }

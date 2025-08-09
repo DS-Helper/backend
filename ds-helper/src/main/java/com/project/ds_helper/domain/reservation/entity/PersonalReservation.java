@@ -31,22 +31,22 @@ public class PersonalReservation extends BaseTime {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user; // 신청한 유저
 
     @Column(name = "name")
-    private String name;
+    private String name; // 신청자 이름
 
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private String phoneNumber; // 신청자 연락처
 
     @Column(name = "visit_date")
-    private LocalDate visitDate;
+    private LocalDate visitDate; // 방문 날짜
 
     @Column(name = "start_time")
-    private LocalTime startTime;
+    private LocalTime startTime; // 봉사 시작 시간
 
     @Column(name = "end_time")
-    private LocalTime endTime;
+    private LocalTime endTime; // 봉사 종료 시간
 
     @Column(name = "address")
     private String address; // 주소
@@ -56,13 +56,14 @@ public class PersonalReservation extends BaseTime {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "recipient_gender")
-    private RecipientGenderType recipientGender;
+    private RecipientGenderType recipientGender; // 도움 받을 사람 성별
 
     @Column(name = "recipient_number")
     private int recipientNumber; // 도움 받는 사람 수
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status")
-    private ReservationStatus reservationStatus; // 예약 상태
+    private ReservationStatus reservationStatus = ReservationStatus.REQUESTED; // 예약 상태
 
 }
