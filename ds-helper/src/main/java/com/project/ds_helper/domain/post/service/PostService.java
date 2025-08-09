@@ -8,6 +8,7 @@ import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
 import com.project.ds_helper.domain.post.dto.response.GetPostResDto;
 import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.post.entity.Post;
+import com.project.ds_helper.domain.post.repository.ImageRepository;
 import com.project.ds_helper.domain.post.repository.PostRepository;
 import com.project.ds_helper.domain.post.util.ImageUtil;
 import com.project.ds_helper.domain.post.util.S3Util;
@@ -20,11 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -34,6 +37,7 @@ public class PostService {
 
         private final PostRepository postRepository;
         private final UserRepository userRepository;
+        private final ImageRepository imageRepository;
         private final UserUtil userUtil;
         private final ImageUtil imageUtil;
         private final PostUtil postUtil;
@@ -44,7 +48,8 @@ public class PostService {
          * 신규 게시글 작성
          * 반환 타입 수정 필요
          * **/
-        public void createPost(Authentication authentication, CreatePostReqDto dto) {
+        @Transactional
+        public void createPost(Authentication authentication, CreatePostReqDto dto) throws IOException {
 
             // 유저 id 추출
             String userId = userUtil.extractUserId(authentication);
@@ -54,16 +59,22 @@ public class PostService {
             List<Image> images = imageUtil.toImages(dto.getImages());
             log.info("이미지 엔티티 리스트 빌드 완료");
 
-            Post post = dto.toPost(dto, user, images);
+            List<Image> savedImages = imageRepository.saveAll(images);
+
+            Post post = dto.toPost(dto, user, savedImages);
             log.info("게시글 엔티티 빌드 완료");
             
             postRepository.save(post);
             log.info("게시글 저장");
+
+            s3Util.uploadImages(dto.getImages());
+            log.info("S3 이미지 저장");
         }
         
         /**
          * 단건 게시물 조회
          * **/
+        @Transactional(readOnly = true)
         public GetPostResDto getOnePost(Authentication authentication, String postId) {
 
             // 유저 id 추출
@@ -80,13 +91,31 @@ public class PostService {
          * 게시글 수정
          * 이미지 리스트 수정 기능 확인
          * **/
+        @Transactional
         public void updatePost(Authentication authentication, UpdatePostReqDto dto) {
+    
+            // 유저 id 추출
+            String userId = userUtil.extractUserId(authentication);
+        
+            // 유저 조회
+            User user = userUtil.findUserById(userId);
+
+            String postId = dto.getPostId();
+            log.info("postId : {}", postId);
+
+            Post post = postUtil.findPostById(postId);
+
+                /**
+                 * 추후 수정 필요
+                 * **/
+//            dto.toUpdatedPost(post, dto);
             
         }
         /**
          * 게시글 삭제 
          * S3 이미지 삭제
          * **/
+        @Transactional
         public void deletePost(Authentication authentication, String postId) {
             
             // 유저 id 조회

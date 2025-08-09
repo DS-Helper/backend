@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/posts")
@@ -28,7 +30,7 @@ public class PostController {
 
     @PostMapping("")
     public ResponseEntity<?> createPost(Authentication authentication,
-                                        @RequestBody @Valid CreatePostReqDto dto){
+                                        @RequestBody @Valid CreatePostReqDto dto) throws IOException {
         postService.createPost(authentication, dto);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
