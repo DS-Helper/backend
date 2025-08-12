@@ -21,11 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -72,21 +74,22 @@ public class PostService {
          * 신규 게시글 작성
          * 반환 타입 수정 필요
          * **/
-        public void createPost(Authentication authentication, CreatePostReqDto dto) {
+        @Transactional
+        public void createPost(Authentication authentication, CreatePostReqDto dto) throws IOException {
 
             // 유저 id 추출
             String userId = userUtil.extractUserId(authentication);
-            
+
             // 유저 조회
             User user = userUtil.findUserById(userId);
-    
+
             // 이미지 엔티티 빌드
             List<Image> images = imageUtil.toImages(dto.getImages());
             log.info("이미지 엔티티 리스트 빌드 완료");
 
             // 이미지 저장 (CascadeType.ALL 이지만, 안정성을 위해 직접 저장)
             List<Image> savedImages = imageRepository.saveAll(images);
-        
+
             // 게시글 엔티티 빌드
             Post post = dto.toPost(dto, user, savedImages);
             log.info("게시글 엔티티 빌드 완료");
@@ -94,28 +97,46 @@ public class PostService {
             // 게시글 저장
             postRepository.save(post);
             log.info("게시글 저장");
+
+            s3Util.uploadImages(dto.getImages());
+            log.info("S3 이미지 저장");
         }
         
-
-    
         /**
          * 게시글 수정
          * 이미지 리스트 수정 기능 확인
          * Dto 수정 필요 (프론트측 답변 오면 )
          * **/
+        @Transactional
         public void updatePost(Authentication authentication, UpdatePostReqDto dto) {
 
-            String userId = userUtil.extractUserId(authentication);
             // 게시글 작성자가 아니면 예외
             // 삭제, 신규 추가 된 이미지 처리
             // s3 이미지 처리
+
+
+            // 유저 id 추출
+            String userId = userUtil.extractUserId(authentication);
+
+            // 유저 조회
+            User user = userUtil.findUserById(userId);
+
+            String postId = dto.getPostId();
+            log.info("postId : {}", postId);
+
+            Post post = postUtil.findPostById(postId);
+
+                /**
+                 * 추후 수정 필요
+                 * **/
+//            dto.toUpdatedPost(post, dto);
 
         }
         /**
          * 게시글 삭제 
          * S3 이미지 삭제
-         *
          * **/
+        @Transactional
         public void deletePost(Authentication authentication, String postId) {
             
             // 유저 id 조회
@@ -141,6 +162,6 @@ public class PostService {
             // 이미지 삭제
             s3Util.deleteImages(imageUrlsToDelete);
         }
-    
+
 
 }
