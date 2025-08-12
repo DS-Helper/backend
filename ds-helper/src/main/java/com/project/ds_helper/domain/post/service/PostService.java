@@ -1,5 +1,6 @@
 package com.project.ds_helper.domain.post.service;
 
+import com.project.ds_helper.common.dto.request.S3ImageUploadReqDto;
 import com.project.ds_helper.common.exception.user.UserNotFoundException;
 import com.project.ds_helper.common.util.PostUtil;
 import com.project.ds_helper.common.util.UserUtil;
@@ -98,7 +99,16 @@ public class PostService {
             postRepository.save(post);
             log.info("게시글 저장");
 
-            s3Util.uploadImages(dto.getImages());
+            s3Util.uploadImages(dto.getImages().stream().map(image -> {
+                try {
+                    return S3ImageUploadReqDto.builder()
+                            .storedFilename(imageUtil.toStoredFilename(image))
+                            .contentType(image.getContentType())
+                            .bytes(image.getBytes()).build();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toList());
             log.info("S3 이미지 저장");
         }
         

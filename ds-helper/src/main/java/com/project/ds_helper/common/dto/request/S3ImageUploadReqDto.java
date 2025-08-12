@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.IOException;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -23,4 +25,5 @@ public class S3ImageUploadReqDto {
 
     @NotNull
     private byte[] bytes;
+
 }
