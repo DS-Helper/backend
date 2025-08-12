@@ -7,6 +7,7 @@ import com.project.ds_helper.domain.reservation.dto.response.CreatePersonalReser
 import com.project.ds_helper.domain.reservation.dto.response.GetPersonalReservationResDto;
 import com.project.ds_helper.domain.reservation.dto.response.UpdatePersonalReservationResDto;
 import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
+import com.project.ds_helper.domain.reservation.enums.ReservationStatus;
 import com.project.ds_helper.domain.reservation.repository.PersonalReservationRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -94,8 +95,10 @@ public class PersonalReservationService {
 
         PersonalReservation personalReservation = personalReservationRepository.findById(personalReservationId).orElseThrow(() -> new IllegalArgumentException("없는 개인 예약 입니다. 예약 ID : " + personalReservationId));
         log.info("개인 예약 조회 완료");
+
+        personalReservation.setReservationStatus(ReservationStatus.CANCELED);
         
-        personalReservationRepository.delete(personalReservation);
+        personalReservationRepository.save(personalReservation);
         log.info("개인 예약 삭제 완료");
     }
 

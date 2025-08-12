@@ -25,6 +25,7 @@ public class PersonalReservationController {
 
     /**
      * 스웨거 등록 필요
+     * 단건 개인 예약 조회
      * **/
     @GetMapping("/{personalReservationId}")
     public ResponseEntity<GetPersonalReservationResDto> getOnePersonalReservation(Authentication authentication,
@@ -34,6 +35,7 @@ public class PersonalReservationController {
 
     /**
      * 스웨거 등록 필요
+     * 신규 개인 예약 생성
      * **/
     @PostMapping("")
     public ResponseEntity<CreatePersonalReservationResDto> createPersonalReservation(Authentication authentication,
@@ -43,6 +45,7 @@ public class PersonalReservationController {
 
     /**
      * 스웨거 등록 필요
+     * 기존 개인 예약 수정
      * **/
     @PutMapping("")
     public ResponseEntity<UpdatePersonalReservationResDto> updatePersonalReservation(Authentication authentication,
@@ -52,6 +55,7 @@ public class PersonalReservationController {
 
     /**
      * 스웨거 등록 필요
+     * 기존 개인 예약 취소
      * **/
     @DeleteMapping("")
     public ResponseEntity<Void> cancelPersonalReservation(Authentication authentication,
