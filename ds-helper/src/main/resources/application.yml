@@ -13,13 +13,20 @@ spring:
   application:
     name:ds-helper
   datasource:
-    url: jdbc:mysql://localhost:3306/ds_helper
+    url: jdbc:mysql://localhost:3306/ds-helper
     username: root
-    password: gh15617110
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
+
+jakarta:
+  persistence:
+    jdbc:
+      url: jdbc:mysql://localhost:3306/ds_helper
 
 # swagger
 springdoc:

@@ -50,7 +50,7 @@ public class PostService {
             String userId = userUtil.extractUserId(authentication);
 
             // 게시글 리스트 조회
-            List<GetPostResDto> posts = postRepository.findAllByUser_Id(userId);
+            List<GetPostResDto> posts = GetPostResDto.toDtoList(postRepository.findAllByUser_Id(userId));
             log.info("게시글 리스트 조회");
 
             return posts;

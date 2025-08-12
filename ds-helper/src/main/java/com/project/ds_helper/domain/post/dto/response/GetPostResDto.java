@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -33,6 +34,13 @@ public class GetPostResDto {
                 .writerName(post.getUser().getName())
                 .imageUrls(post.getImages().stream().map(Image::getUrl).toList())
                 .build();
+    }
+
+    public static List<GetPostResDto> toDtoList(List<Post> posts){
+        if(posts.isEmpty()){
+            return new ArrayList<GetPostResDto>();
+        }
+        return posts.stream().map(GetPostResDto::toDto).toList();
     }
 
 }
