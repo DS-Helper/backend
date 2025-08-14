@@ -67,7 +67,7 @@ public class PersonalReservationController {
         return new ResponseEntity<UpdatePersonalReservationResDto>(personalReservationService.updatePersonalReservation(authentication, dto), HttpStatus.CREATED);
     }
     @Tag(name = "개인 예약")
-    @Operation(summary = "개인 예약 수정")
+    @Operation(summary = "개인 예약 취소")
     @PatchMapping("")
     public ResponseEntity<Void> cancelPersonalReservation(Authentication authentication,
                                                           @RequestBody @Valid DeletePersonalReservationReqDto dto){

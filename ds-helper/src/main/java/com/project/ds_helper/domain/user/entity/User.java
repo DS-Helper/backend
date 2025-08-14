@@ -26,7 +26,7 @@ public class User extends BaseTime {
     @Column(name = "user_id")
     private String id; // 식별자
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true)
     private String email; // 이메일
 
     @Builder.Default
