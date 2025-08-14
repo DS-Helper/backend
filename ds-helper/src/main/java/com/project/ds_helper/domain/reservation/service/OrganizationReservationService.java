@@ -30,6 +30,8 @@ public class OrganizationReservationService {
     /**
      * 유저의 전체 기관 예약 조회
      * **/
+
+
     /**
      * 유저의 개인 예약 전체 조회
      * **/
@@ -54,6 +56,19 @@ public class OrganizationReservationService {
         return GetOrganizationReservationResDto.toDto(organizationReservationRepository.findById(organizationReservationId).
                 orElseThrow(() -> new IllegalArgumentException("없는 기관 예약 입니다. 예약 ID : " + organizationReservationId)));
     }
+
+    /**
+     * 요청 상태별 개인 예약 조회
+     * userId와 reservationStatus 기반 조회
+     * **/
+//    public List<GetOrganizationReservationResDto> getAllOrganizationReservationByReservationStatus(Authentication authentication, String reservationStatus) {
+//        String userId = userUtil.extractUserId(authentication);
+//        ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
+//        log.info("reservationStatus : {}", reservationStatus);
+//
+//        return GetOrganizationReservationResDto.toDtoList(organizationReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus));
+//    }
+
 
     /**
      * 신규 개인 예약 생성
@@ -120,15 +135,4 @@ public class OrganizationReservationService {
         log.info("기관 예약 삭제 완료");
     }
 
-    /**
-     * 요청 상태별 개인 예약 조회
-     * userId와 reservationStatus 기반 조회
-     * **/
-    public List<GetOrganizationReservationResDto> getAllOrganizationReservationByReservationStatus(Authentication authentication, String reservationStatus) {
-            String userId = userUtil.extractUserId(authentication);
-            ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
-            log.info("reservationStatus : {}", reservationStatus);
-
-            return GetOrganizationReservationResDto.toDtoList(organizationReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus));
-    }
 }

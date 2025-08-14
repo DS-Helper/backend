@@ -7,6 +7,9 @@ import com.project.ds_helper.domain.reservation.dto.response.CreatePersonalReser
 import com.project.ds_helper.domain.reservation.dto.response.GetPersonalReservationResDto;
 import com.project.ds_helper.domain.reservation.dto.response.UpdatePersonalReservationResDto;
 import com.project.ds_helper.domain.reservation.service.PersonalReservationService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,59 +28,47 @@ public class PersonalReservationController {
 
     private final PersonalReservationService personalReservationService;
     
-    /**
-     * 유저의 개인 예약 전체 조회
-     * **/
-    @GetMapping("/all")
-    public ResponseEntity<List<GetPersonalReservationResDto>> getAllPersonalReservation(Authentication authentication){
-        return new ResponseEntity<List<GetPersonalReservationResDto>>(personalReservationService.getAllPersonalReservation(authentication), HttpStatus.OK);
-    }
 
-    /**
-     * 스웨거 등록 필요
-     * 단건 개인 예약 조회
-     * **/
+//    @Hidden
+//    @GetMapping("/all")
+//    public ResponseEntity<List<GetPersonalReservationResDto>> getAllPersonalReservation(Authentication authentication){
+//        return new ResponseEntity<List<GetPersonalReservationResDto>>(personalReservationService.getAllPersonalReservation(authentication), HttpStatus.OK);
+//    }
+
+
+    @Tag(name = "개인 예약")
+    @Operation(summary = "단건 개인 예약 조회")
     @GetMapping("/{personalReservationId}")
     public ResponseEntity<GetPersonalReservationResDto> getOnePersonalReservation(Authentication authentication,
                                                                                   @PathVariable("personalReservationId") String personalReservationId ){
         return new ResponseEntity<GetPersonalReservationResDto>(personalReservationService.getOnePersonalReservation(authentication, personalReservationId), HttpStatus.OK);
     }
 
-    /**
-     * 스웨거 등록 필요
-     * 요청 상태별 조회
-     * **/
-    @GetMapping("/reservation-status")
-    public ResponseEntity<List<GetPersonalReservationResDto>> getAllPersonalReservationByReservationStatus(Authentication authentication,
-                                                                                  @RequestParam("reservationStatus") String reservationStatus ){
-        return new ResponseEntity<List<GetPersonalReservationResDto>>(personalReservationService.getAllPersonalReservationByReservationStatus(authentication, reservationStatus), HttpStatus.OK);
-    }
 
-    /**
-     * 스웨거 등록 필요
-     * 신규 개인 예약 생성
-     * **/
+//        @GetMapping("/reservation-status")
+//    public ResponseEntity<List<GetPersonalReservationResDto>> getAllPersonalReservationByReservationStatus(Authentication authentication,
+//                                                                                  @RequestParam("reservationStatus") String reservationStatus ){
+//        return new ResponseEntity<List<GetPersonalReservationResDto>>(personalReservationService.getAllPersonalReservationByReservationStatus(authentication, reservationStatus), HttpStatus.OK);
+//    }
+
+    @Tag(name = "개인 예약")
+    @Operation(summary = "신규 개인 예약 생성")
     @PostMapping("")
     public ResponseEntity<CreatePersonalReservationResDto> createPersonalReservation(Authentication authentication,
                                                        @RequestBody @Valid CreatePersonalReservationReqDto dto){
         return new ResponseEntity<CreatePersonalReservationResDto>(personalReservationService.createPersonalReservation(authentication, dto), HttpStatus.CREATED);
     }
 
-    /**
-     * 스웨거 등록 필요
-     * 기존 개인 예약 수정
-     * **/
+    @Tag(name = "개인 예약")
+    @Operation(summary = "개인 예약 수정")
     @PutMapping("")
     public ResponseEntity<UpdatePersonalReservationResDto> updatePersonalReservation(Authentication authentication,
                                                                                     @RequestBody @Valid UpdatePersonalReservationReqDto dto){
         return new ResponseEntity<UpdatePersonalReservationResDto>(personalReservationService.updatePersonalReservation(authentication, dto), HttpStatus.CREATED);
     }
-
-    /**
-     * 스웨거 등록 필요
-     * 기존 개인 예약 취소
-     * **/
-    @DeleteMapping("")
+    @Tag(name = "개인 예약")
+    @Operation(summary = "개인 예약 수정")
+    @PatchMapping("")
     public ResponseEntity<Void> cancelPersonalReservation(Authentication authentication,
                                                           @RequestBody @Valid DeletePersonalReservationReqDto dto){
         personalReservationService.cancelPersonalReservation(authentication, dto);

@@ -56,13 +56,13 @@ public class PersonalReservationService {
      * 요청 상태별 개인 예약 조회
      * userId와 reservationStatus 기반 조회
      * **/
-    public List<GetPersonalReservationResDto> getAllPersonalReservationByReservationStatus(Authentication authentication, String reservationStatus) {
-        String userId = userUtil.extractUserId(authentication);
-        ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
-        log.info("reservationStatus : {}", reservationStatus);
-
-        return GetPersonalReservationResDto.toDtoList(personalReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus));
-    }
+//    public List<GetPersonalReservationResDto> getAllPersonalReservationByReservationStatus(Authentication authentication, String reservationStatus) {
+//        String userId = userUtil.extractUserId(authentication);
+//        ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
+//        log.info("reservationStatus : {}", reservationStatus);
+//
+//        return GetPersonalReservationResDto.toDtoList(personalReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus));
+//    }
 
     /**
      * 신규 개인 예약 생성
