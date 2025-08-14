@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -63,5 +65,14 @@ public class GetOrganizationReservationResDto {
                 .recipientNumber(organizationReservation.getRecipientNumber())
                 .reservationStatus(organizationReservation.getReservationStatus().getKorean())
                 .build();
+    }
+
+    public static List<GetOrganizationReservationResDto> toDtoList(List<OrganizationReservation> organizationReservations){
+        if(organizationReservations.isEmpty()) {
+            return new ArrayList<GetOrganizationReservationResDto>();
+        }
+        return organizationReservations.stream().map(GetOrganizationReservationResDto::toDto).toList();
+
+
     }
 }

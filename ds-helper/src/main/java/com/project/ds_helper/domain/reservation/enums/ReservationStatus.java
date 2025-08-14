@@ -17,7 +17,7 @@ public enum ReservationStatus {
      }
 
     // 한국어로 일치하는 status 찾기
-     public ReservationStatus findStatusByString(String korean){
+     public static ReservationStatus findStatusByString(String korean){
         for(ReservationStatus status : values()){
             if(status.getKorean().equals(korean)){
                 return status;

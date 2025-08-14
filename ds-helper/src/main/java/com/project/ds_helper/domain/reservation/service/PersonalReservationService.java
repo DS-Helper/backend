@@ -1,5 +1,6 @@
 package com.project.ds_helper.domain.reservation.service;
 
+import com.project.ds_helper.common.util.UserUtil;
 import com.project.ds_helper.domain.reservation.dto.request.CreatePersonalReservationReqDto;
 import com.project.ds_helper.domain.reservation.dto.request.DeletePersonalReservationReqDto;
 import com.project.ds_helper.domain.reservation.dto.request.UpdatePersonalReservationReqDto;
@@ -9,11 +10,13 @@ import com.project.ds_helper.domain.reservation.dto.response.UpdatePersonalReser
 import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
 import com.project.ds_helper.domain.reservation.enums.ReservationStatus;
 import com.project.ds_helper.domain.reservation.repository.PersonalReservationRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.rmi.server.RemoteServer;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -21,6 +24,18 @@ import org.springframework.stereotype.Service;
 public class PersonalReservationService {
 
     private final PersonalReservationRepository personalReservationRepository;
+    private final UserUtil userUtil;
+
+
+    /**
+     * 유저의 개인 예약 전체 조회
+     * **/
+    public List<GetPersonalReservationResDto> getAllPersonalReservation(Authentication authentication) {
+        List<PersonalReservation> personalReservations = personalReservationRepository.findAllByUser_Id(userUtil.extractUserId(authentication));
+        log.info("personalReservations selected successfully");
+
+        return GetPersonalReservationResDto.toDtoList(personalReservations);
+    }
 
     /**
      * 단건 개인 예약 조회
@@ -35,6 +50,18 @@ public class PersonalReservationService {
         // 개인 예약 조회 및 응답
         return GetPersonalReservationResDto.toDto(personalReservationRepository.findById(personalReservationId).
                 orElseThrow(() -> new IllegalArgumentException("없는 개인 예약 입니다. 예약 ID : " + personalReservationId)));
+    }
+
+    /**
+     * 요청 상태별 개인 예약 조회
+     * userId와 reservationStatus 기반 조회
+     * **/
+    public List<GetPersonalReservationResDto> getAllPersonalReservationByReservationStatus(Authentication authentication, String reservationStatus) {
+        String userId = userUtil.extractUserId(authentication);
+        ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
+        log.info("reservationStatus : {}", reservationStatus);
+
+        return GetPersonalReservationResDto.toDtoList(personalReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus));
     }
 
     /**
@@ -54,6 +81,9 @@ public class PersonalReservationService {
         return CreatePersonalReservationResDto.toDto(personalReservationRepository.save(personalReservation));
     }
 
+    /**
+     * 개인 예약 수정
+     * **/
     public UpdatePersonalReservationResDto updatePersonalReservation(Authentication authentication, UpdatePersonalReservationReqDto dto) {
 
         // 유저 정보 획득
@@ -101,5 +131,6 @@ public class PersonalReservationService {
         personalReservationRepository.save(personalReservation);
         log.info("개인 예약 삭제 완료");
     }
+
 
 }

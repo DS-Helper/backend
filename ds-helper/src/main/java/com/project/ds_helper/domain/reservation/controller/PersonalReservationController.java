@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +24,14 @@ import org.springframework.web.bind.annotation.*;
 public class PersonalReservationController {
 
     private final PersonalReservationService personalReservationService;
+    
+    /**
+     * 유저의 개인 예약 전체 조회
+     * **/
+    @GetMapping("/all")
+    public ResponseEntity<List<GetPersonalReservationResDto>> getAllPersonalReservation(Authentication authentication){
+        return new ResponseEntity<List<GetPersonalReservationResDto>>(personalReservationService.getAllPersonalReservation(authentication), HttpStatus.OK);
+    }
 
     /**
      * 스웨거 등록 필요
@@ -31,6 +41,16 @@ public class PersonalReservationController {
     public ResponseEntity<GetPersonalReservationResDto> getOnePersonalReservation(Authentication authentication,
                                                                                   @PathVariable("personalReservationId") String personalReservationId ){
         return new ResponseEntity<GetPersonalReservationResDto>(personalReservationService.getOnePersonalReservation(authentication, personalReservationId), HttpStatus.OK);
+    }
+
+    /**
+     * 스웨거 등록 필요
+     * 요청 상태별 조회
+     * **/
+    @GetMapping("/reservation-status")
+    public ResponseEntity<List<GetPersonalReservationResDto>> getAllPersonalReservationByReservationStatus(Authentication authentication,
+                                                                                  @RequestParam("reservationStatus") String reservationStatus ){
+        return new ResponseEntity<List<GetPersonalReservationResDto>>(personalReservationService.getAllPersonalReservationByReservationStatus(authentication, reservationStatus), HttpStatus.OK);
     }
 
     /**

@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -20,6 +22,14 @@ public class OrganizationReservationController {
     private final OrganizationReservationService organizationReservationService;
 
     /**
+     * 유저의 기관 예약 전체 조회
+     * **/
+    @GetMapping("/all")
+    public ResponseEntity<List<GetOrganizationReservationResDto>> getAllOrganizationReservation(Authentication authentication){
+        return new ResponseEntity<List<GetOrganizationReservationResDto>>(organizationReservationService.getAllOrganizationReservation(authentication), HttpStatus.OK);
+    }
+
+    /**
      * 스웨거 등록 필요
      * 단건 개인 예약 조회
      * **/
@@ -27,6 +37,16 @@ public class OrganizationReservationController {
     public ResponseEntity<GetOrganizationReservationResDto> getOneOrganizationReservation(Authentication authentication,
                                                                                           @PathVariable("organizationReservationId") String organizationReservationId ){
         return new ResponseEntity<GetOrganizationReservationResDto>(organizationReservationService.getOneOrganizationReservation(authentication, organizationReservationId), HttpStatus.OK);
+    }
+
+    /**
+     * 스웨거 등록 필요
+     * 요청 상태별 조회
+     * **/
+    @GetMapping("/reservation-status")
+    public ResponseEntity<List<GetOrganizationReservationResDto>> getAllOrganizationReservationByReservationStatus(Authentication authentication,
+                                                                                                           @RequestParam("reservationStatus") String reservationStatus ){
+        return new ResponseEntity<List<GetOrganizationReservationResDto>>(organizationReservationService.getAllOrganizationReservationByReservationStatus(authentication, reservationStatus), HttpStatus.OK);
     }
 
     /**

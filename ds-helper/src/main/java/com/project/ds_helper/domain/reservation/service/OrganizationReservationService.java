@@ -1,12 +1,15 @@
 package com.project.ds_helper.domain.reservation.service;
 
+import com.project.ds_helper.common.util.UserUtil;
 import com.project.ds_helper.domain.reservation.dto.request.CreateOrganizationReservationReqDto;
 import com.project.ds_helper.domain.reservation.dto.request.DeleteOrganizationReservationReqDto;
 import com.project.ds_helper.domain.reservation.dto.request.UpdateOrganizationReservationReqDto;
 import com.project.ds_helper.domain.reservation.dto.response.CreateOrganizationReservationResDto;
 import com.project.ds_helper.domain.reservation.dto.response.GetOrganizationReservationResDto;
+import com.project.ds_helper.domain.reservation.dto.response.GetPersonalReservationResDto;
 import com.project.ds_helper.domain.reservation.dto.response.UpdateOrganizationReservationResDto;
 import com.project.ds_helper.domain.reservation.entity.OrganizationReservation;
+import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
 import com.project.ds_helper.domain.reservation.enums.ReservationStatus;
 import com.project.ds_helper.domain.reservation.repository.OrganizationReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +17,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class OrganizationReservationService {
 
     private final OrganizationReservationRepository organizationReservationRepository;
+    private final UserUtil userUtil;
+    
+    /**
+     * 유저의 전체 기관 예약 조회
+     * **/
+    /**
+     * 유저의 개인 예약 전체 조회
+     * **/
+    public List<GetOrganizationReservationResDto> getAllOrganizationReservation(Authentication authentication) {
+        List<OrganizationReservation> organizationReservations = organizationReservationRepository.findAllByUser_Id(userUtil.extractUserId(authentication));
+        log.info("organizationReservations selected successfully");
+
+        return GetOrganizationReservationResDto.toDtoList(organizationReservations);
+    }
 
     /**
      * 단건 개인 예약 조회
@@ -101,5 +120,15 @@ public class OrganizationReservationService {
         log.info("기관 예약 삭제 완료");
     }
 
+    /**
+     * 요청 상태별 개인 예약 조회
+     * userId와 reservationStatus 기반 조회
+     * **/
+    public List<GetOrganizationReservationResDto> getAllOrganizationReservationByReservationStatus(Authentication authentication, String reservationStatus) {
+            String userId = userUtil.extractUserId(authentication);
+            ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
+            log.info("reservationStatus : {}", reservationStatus);
 
+            return GetOrganizationReservationResDto.toDtoList(organizationReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus));
+    }
 }
