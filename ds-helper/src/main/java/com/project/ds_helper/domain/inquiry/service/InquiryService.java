@@ -33,7 +33,7 @@ public class InquiryService {
     /**
      * 유저의 전체 문의글 조회
      * **/
-    public Object getAllInquiresOfUser(Authentication authentication) {
+    public Object getAllInquiriesOfUser(Authentication authentication) {
        return GetAllInquiriesOfUserResDto.toDtoList(inquiryRepository.findAllByUser_Id(userUtil.extractUserId(authentication)));
     }
 

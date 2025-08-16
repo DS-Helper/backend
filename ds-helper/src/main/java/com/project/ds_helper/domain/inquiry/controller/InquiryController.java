@@ -25,8 +25,8 @@ public class InquiryController {
     @Tag( name = "문의")
     @Operation(summary = "유저의 전체 문의 조회")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllInquiresOfUser(Authentication authentication){
-        return ResponseEntity.ok(inquiryService.getAllInquiresOfUser(authentication));
+    public ResponseEntity<?> getAllInquiriesOfUser(Authentication authentication){
+        return ResponseEntity.ok(inquiryService.getAllInquiriesOfUser(authentication));
     }
     
     @Tag( name = "문의")
