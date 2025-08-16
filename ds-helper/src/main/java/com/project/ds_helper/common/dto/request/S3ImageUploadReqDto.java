@@ -3,6 +3,7 @@ package com.project.ds_helper.common.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -25,5 +26,4 @@ public class S3ImageUploadReqDto {
 
     @NotNull
     private byte[] bytes;
-
 }
