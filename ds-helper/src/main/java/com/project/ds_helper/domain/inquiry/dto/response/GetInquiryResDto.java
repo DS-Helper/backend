@@ -5,18 +5,12 @@ import com.project.ds_helper.domain.reply.dto.response.ReplyDto;
 import com.project.ds_helper.domain.user.dto.response.UserDto;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class GetAllInquiriesOfUserResDto {
+public class GetInquiryResDto {
 
     private String inquiryId;
 
@@ -30,8 +24,8 @@ public class GetAllInquiriesOfUserResDto {
 
     private ReplyDto reply;
 
-    public static GetAllInquiriesOfUserResDto toDto(Inquiry inquiry){
-        return GetAllInquiriesOfUserResDto.builder()
+    public static GetInquiryResDto toDto(Inquiry inquiry){
+        return GetInquiryResDto.builder()
                 .inquiryId(inquiry.getId())
                 .content(inquiry.getContent())
                 .type(inquiry.getType().getKorean())
@@ -40,10 +34,4 @@ public class GetAllInquiriesOfUserResDto {
                 .reply(ReplyDto.toDto(inquiry.getReply()))
                 .build();
     }
-
-    public static Map<String, List<GetAllInquiriesOfUserResDto>> toDtoList(List<Inquiry> inquiries){
-        return inquiries.stream().map(GetAllInquiriesOfUserResDto::toDto).collect(Collectors.groupingBy(GetAllInquiriesOfUserResDto::getType));
-    }
-
-
 }

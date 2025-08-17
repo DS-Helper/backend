@@ -71,4 +71,10 @@ cloud:
 s3:
   bucket: your-bucket-name
 
+file:
+  upload:
+    max-size: 3MB
+    max-request-size: 30MB
+    allowed-file-extensions: jpg,jpeg,png
+
 

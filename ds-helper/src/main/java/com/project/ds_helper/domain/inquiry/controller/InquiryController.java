@@ -1,6 +1,8 @@
 package com.project.ds_helper.domain.inquiry.controller;
 
 import com.project.ds_helper.domain.inquiry.dto.request.CreateInquiryReqDto;
+import com.project.ds_helper.domain.inquiry.dto.response.GetAllInquiriesOfUserResDto;
+import com.project.ds_helper.domain.inquiry.dto.response.GetInquiryResDto;
 import com.project.ds_helper.domain.inquiry.service.InquiryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -25,8 +29,16 @@ public class InquiryController {
     @Tag( name = "문의")
     @Operation(summary = "유저의 전체 문의 조회")
     @GetMapping("/all")
-    public ResponseEntity<?> getAllInquiriesOfUser(Authentication authentication){
+    public ResponseEntity<Map<String, List<GetAllInquiriesOfUserResDto>>> getAllInquiriesOfUser(Authentication authentication){
         return ResponseEntity.ok(inquiryService.getAllInquiriesOfUser(authentication));
+    }
+
+    @Tag( name = "문의")
+    @Operation(summary = "단건 문의 조회")
+    @GetMapping("/{inquiryId}")
+    public ResponseEntity<GetInquiryResDto> getInquiry(Authentication authentication,
+                                                       @PathVariable("inquiryId") String inquiryId){
+        return ResponseEntity.ok(inquiryService.getInquiry(authentication, inquiryId));
     }
     
     @Tag( name = "문의")
@@ -37,6 +49,8 @@ public class InquiryController {
         inquiryService.createInquiry(authentication, dto);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
+
+
 
 
 
