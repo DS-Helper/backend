@@ -15,6 +15,10 @@ import com.project.ds_helper.domain.post.util.S3Util;
 import com.project.ds_helper.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +41,14 @@ public class InquiryService {
     /**
      * 유저의 전체 문의글 조회
      * **/
-    public Map<String, List<GetAllInquiriesOfUserResDto>> getAllInquiriesOfUser(Authentication authentication) {
-       return GetAllInquiriesOfUserResDto.toDtoList(inquiryRepository.findAllByUser_Id(userUtil.extractUserId(authentication)));
+    public GetAllInquiriesOfUserResDto getAllInquiriesOfUser(Authentication authentication, int page, int size, String sort, String sortBy) {
+        log.info("page : {}, size : {}, sort : {}, sortBy : {}", page, size, sort, sortBy);
+
+        // pageRequest
+        Pageable pageRequest = PageRequest.of(page, Math.min(size, 100), sort.equalsIgnoreCase("desc")? Sort.Direction.DESC : Sort.Direction.ASC, "createdAt");
+    
+        // 유저의 페이징 처리된 문의글 전체 조회
+        return GetAllInquiriesOfUserResDto.toDto(inquiryRepository.findAllByUser_Id(userUtil.extractUserId(authentication), pageRequest));
     }
 
     /**
@@ -58,7 +68,8 @@ public class InquiryService {
      * inquiry에 url 저장
      * **/
     public void createInquiry(Authentication authentication, CreateInquiryReqDto dto) throws IOException {
-
+            
+            // 이미지 파일 검증
             dto.getIamges().stream().peek(image -> {
                 try {
                     fileUtil.isValidSizeAndExtension(image);
@@ -66,8 +77,11 @@ public class InquiryService {
                     throw new RuntimeException("File Is InValid");
                 }
             });
+            
+            // 유저 조회
 
             User user = userUtil.findUserById(userUtil.extractUserId(authentication));
+            // 이미지 업로드
             s3Util.uploadImages(dto.getIamges().stream().map(image -> {
                 try {
                     return new S3ImageUploadReqDto(imageUtil.toStoredFilename(image), image.getContentType(), image.getBytes());
@@ -75,10 +89,14 @@ public class InquiryService {
                     throw new RuntimeException("S3 Upload Fail");
                 }
             }).toList());
-
+            
+            // 이미지 엔티티 빌드
             List<Image> images = imageUtil.toImages(dto.getIamges());
-
+            
+            // 문의글 엔티티 빌드
             Inquiry inquiry = dto.toInquiry(dto, user, images.stream().map(Image::getUrl).toList());
+
+            // 이미지, 문의글 저장
             imageRepository.saveAll(images);
             log.info("Image Saved Successfully");
             inquiryRepository.save(inquiry);

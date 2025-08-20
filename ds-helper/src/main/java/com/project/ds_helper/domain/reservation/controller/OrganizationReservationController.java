@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/organization-reservations")
+@RequestMapping("/organization-reservations")
 public class OrganizationReservationController {
 
     private final OrganizationReservationService organizationReservationService;

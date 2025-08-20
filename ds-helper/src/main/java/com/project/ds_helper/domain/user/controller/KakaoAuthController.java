@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
+
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,15 +27,16 @@ public class KakaoAuthController {
     @Tag(name = "유저")
     @Operation(summary = "카카오 회원가입 & 로그인 URL 조회 API")
     @GetMapping("/login-url")
-    public ResponseEntity<?>getKakaoLoginUrl(){
-        return kakaoOauthService.getKakaoLoginUrl();
+    public ResponseEntity<String>getKakaoLoginUrl(){
+        return ResponseEntity.ofNullable(kakaoOauthService.getKakaoLoginUrl());
     }
 
     @Tag(name = "유저")
     @Operation(summary = "카카오 회원가입 & 로그인 API")
     @GetMapping("/login")
-    public ResponseEntity<?> JoinWithKakaoOauthToken(@RequestParam("code") String kakaoAuthToken,
-                                                           HttpServletResponse httpServletResponse) throws InterruptedException {
-        return ResponseEntity.ok(kakaoOauthService.JoinWithKakaoOauthToken(kakaoAuthToken, httpServletResponse));
+    public ResponseEntity<Void> JoinWithKakaoOauthToken(@RequestParam("code") String kakaoAuthToken,
+                                                                                 HttpServletResponse httpServletResponse) throws InterruptedException {
+        kakaoOauthService.JoinWithKakaoOauthToken(kakaoAuthToken, httpServletResponse);
+        return ResponseEntity.ofNullable(null);
     }
 }

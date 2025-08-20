@@ -36,6 +36,7 @@ public class Inquiry extends BaseTime {
     @Column(name = "image_url")
     private List<String> imagesUrl;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private InquiryType type = InquiryType.OTHER; // 유형

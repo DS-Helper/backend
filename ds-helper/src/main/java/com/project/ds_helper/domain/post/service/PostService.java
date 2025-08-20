@@ -6,6 +6,7 @@ import com.project.ds_helper.common.util.PostUtil;
 import com.project.ds_helper.common.util.UserUtil;
 import com.project.ds_helper.domain.post.dto.request.CreatePostReqDto;
 import com.project.ds_helper.domain.post.dto.request.UpdatePostReqDto;
+import com.project.ds_helper.domain.post.dto.response.GetAllPostOfUserResDto;
 import com.project.ds_helper.domain.post.dto.response.GetPostResDto;
 import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.post.entity.Post;
@@ -18,6 +19,9 @@ import com.project.ds_helper.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -47,16 +51,15 @@ public class PostService {
         /**
          * 유저의 모든 게시글 조회
          * **/
-        public List<GetPostResDto> getAllPostOfUser(Authentication authentication) {
+        public GetAllPostOfUserResDto getAllPostOfUser(Authentication authentication, int page, int size, String sort, String sortBy) {
 
-            // 유저 id 추출
-            String userId = userUtil.extractUserId(authentication);
+            Pageable pageRequest = PageRequest.of(page, size, sort.equalsIgnoreCase("desc")? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
 
             // 게시글 리스트 조회
-            List<GetPostResDto> posts = GetPostResDto.toDtoList(postRepository.findAllByUser_Id(userId));
+            GetAllPostOfUserResDto response = GetAllPostOfUserResDto.toDtoList(postRepository.findAllByUser_Id(userUtil.extractUserId(authentication),  pageRequest));
             log.info("게시글 리스트 조회");
 
-            return posts;
+            return response;
         }
 
         /**

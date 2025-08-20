@@ -25,8 +25,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -61,7 +63,7 @@ public class KakaoOauthService {
         }
 
         @Transactional(readOnly = true)
-    public ResponseEntity<?> getKakaoLoginUrl() {
+        public String getKakaoLoginUrl() {
             log.info("login-url-responded");
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -70,7 +72,7 @@ public class KakaoOauthService {
                     .append("&redirect_uri=").append(redirectUri)
                     .append("&response_type=code");
 
-        return ResponseEntity.ok(stringBuilder.toString());
+        return stringBuilder.toString();
 
 //        @GetMapping("/oauth2/authorize/kakao")
 //        public void redirectToKakao(HttpServletResponse res) throws IOException {
@@ -91,16 +93,11 @@ public class KakaoOauthService {
      * 신규 카카오 회원 가입 시 자체 회원가입 여부 확인 필요
      * **/
     @Transactional
-    public CompletableFuture JoinWithKakaoOauthToken(String code, HttpServletResponse httpServletResponse) throws InterruptedException {
+    public void JoinWithKakaoOauthToken(String code, HttpServletResponse httpServletResponse) throws InterruptedException {
             log.info("kakaoAuthToken : {}", code);
             
-            // 카카오 토큰 조회
-//            Mono<KakaoTokenResponse> kakaoTokenResponse = fetchToken(code);
-            log.info("kakao token selected successfully");
-            
-            // 토큰에서 유저 정보 조회
-//            Mono<KakaoUserResponse> kakaoUserResponse =
-            return CompletableFuture.completedFuture(fetchToken(code).subscribe(kakaoTokenResponse -> fetchUserInfo(kakaoTokenResponse.getAccessToken()).subscribe(kakaoUserResponse -> {
+            // 토큰에서 유저 정보 조회 (비동기로 시작 -> 동기화)
+            KakaoUserResponse kakaoUserResponse = fetchUserInfo(fetchToken(code).getAccessToken());
                         log.info("kakao user responded successfully");
 
                         // 유저 정보 추출
@@ -130,7 +127,6 @@ public class KakaoOauthService {
 
                             // jwt 토큰 발급 및 쿠키 저장
                             generateJwtTokenAndPutInCookie(httpServletResponse, userId, userRole);
-
 
                         }else {
                             // Email 기반 로컬 회원가입 여부 조회
@@ -171,32 +167,13 @@ public class KakaoOauthService {
 
                             // jwt 토큰 발급 및 쿠키 저장
                             generateJwtTokenAndPutInCookie(httpServletResponse, userId, userRole);
-
-
                         }
-                    })));
     }
 
     /**
      * 1) 인가 코드를 받아 액세스 토큰으로 교환
      */
-    public Mono<KakaoTokenResponse> fetchToken(String code) { // KakaoTokenResponse
-//        String url = "https://kauth.kakao.com/oauth/token";
-//
-//        HttpHeaders headers = new HttpHeaders();
-//
-//
-//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//
-//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//        params.add("grant_type", "authorization_code");
-//        params.add("client_id", "카카오_앱키");
-//        params.add("redirect_uri", "리다이렉트_주소");
-//        params.add("code", code);
-//
-//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-
-//        return restTemplate.postForObject(url, request, KakaoTokenResponse.class);
+    public KakaoTokenResponse fetchToken(String code) { // KakaoTokenResponse
         return kakaoOauthWebClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/oauth/token")
@@ -208,25 +185,15 @@ public class KakaoOauthService {
                         .with("redirect_uri", redirectUri)
                         .with("code", code))
                 .retrieve()
-                .bodyToMono(KakaoTokenResponse.class);
+                .bodyToMono(KakaoTokenResponse.class)
+                .block(Duration.ofMillis(5000));
     }
 
 
     /**
      * 2) 받은 액세스 토큰으로 사용자 정보 조회
      */
-    public Mono<KakaoUserResponse> fetchUserInfo(String accessToken) { // Mono<KakaoUserResponse>
-
-//        String url = "https://kapi.kakao.com/v2/user/me";
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//        headers.setBearerAuth(accessToken);
-//
-//        HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
-//
-//        return restTemplate.postForObject(url, request, KakaoUserResponse.class);
-
+    public KakaoUserResponse fetchUserInfo(String accessToken) { // Mono<KakaoUserResponse>
         return WebClient.create("https://kapi.kakao.com")
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -235,7 +202,8 @@ public class KakaoOauthService {
                 )
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
-                .bodyToMono(KakaoUserResponse.class);
+                .bodyToMono(KakaoUserResponse.class)
+                .block(Duration.ofMillis(5000));
     }
     
     /**

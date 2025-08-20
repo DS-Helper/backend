@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/personal-reservations")
+@RequestMapping("/personal-reservations")
 public class PersonalReservationController {
 
     private final PersonalReservationService personalReservationService;

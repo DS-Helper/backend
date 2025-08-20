@@ -29,8 +29,12 @@ public class InquiryController {
     @Tag( name = "문의")
     @Operation(summary = "유저의 전체 문의 조회")
     @GetMapping("/all")
-    public ResponseEntity<Map<String, List<GetAllInquiriesOfUserResDto>>> getAllInquiriesOfUser(Authentication authentication){
-        return ResponseEntity.ok(inquiryService.getAllInquiriesOfUser(authentication));
+    public ResponseEntity<GetAllInquiriesOfUserResDto> getAllInquiriesOfUser(Authentication authentication,
+                                                                                                @RequestParam(defaultValue = "0") int page,
+                                                                                                @RequestParam(defaultValue = "10") int size,
+                                                                                                @RequestParam(defaultValue = "desc") String sort,
+                                                                                                @RequestParam(defaultValue = "createdAt") String sortBy){
+        return ResponseEntity.ok(inquiryService.getAllInquiriesOfUser(authentication, page, size, sort, sortBy));
     }
 
     @Tag( name = "문의")
