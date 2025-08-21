@@ -33,7 +33,7 @@ public class UrlFilter {
     }
 
 
-    private static final String LOG_OUT_PATH = "/api/v1/auth/logout";
+    private static final String LOG_OUT_PATH = "/auth/logout";
 
     public static String[] getSecurityFilterPassPath(){
         return SECURITY_FILTER_CHAIN_PASS_URL;
