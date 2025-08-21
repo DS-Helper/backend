@@ -33,9 +33,4 @@ public class KakaoOauth extends BaseTime {
 
     @Column(name = "oauth_email")
     private String oauthEmail;
-
-
-
-
-
 }

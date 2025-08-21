@@ -1,19 +1,18 @@
 package com.project.ds_helper.domain.user.enums;
 
-public enum OauthType {
-
-    KAKAO("카카오"),
-    GOOGLE("구글"),
-    NAVER("네이버");
+public enum UserType {
+    
+    PERSONAL("개인"),
+    ORGANIZATION("기관");
 
     private final String korean;
 
-    OauthType(String korean){
+    UserType(String korean){
         this.korean = korean;
     }
 
-    public OauthType findByKorean(String korean){
-        for(OauthType type : values()){
+    public UserType findByKorean(String korean){
+        for(UserType type : values()){
             if(type.korean.equals("korean")){
                 return type;
             }

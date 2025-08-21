@@ -7,6 +7,7 @@ import com.project.ds_helper.domain.reservation.entity.OrganizationReservation;
 import com.project.ds_helper.domain.reservation.entity.PersonalReservation;
 import lombok.Builder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.awt.print.Pageable;
 import java.time.LocalDate;
@@ -61,10 +62,14 @@ public record GetReservationsByReservationStatusResDto(
         }
 
         public static PageResDto toPageResDto(Page<PersonalReservation> per, Page<OrganizationReservation> org){
-            int page = per.getNumber();
+            int page = per.getNumber(); // 0-based (Slice일 땐 호출자가 0 고정으로 넣어도 OK)
             int size = per.getSize();
-            long totalElements = per.getTotalElements();
-            int totalPages = per.getTotalPages();
-            int
+            long totalElements = per.getTotalElements();  // Slice면 -1 또는 0
+            int totalPages = per.getTotalPages(); // Slice면 -1
+            boolean first = per.isFirst();
+            boolean last = per.isLast();
+            boolean hasNext = per.hasNext();
+            boolean hasPrevious = per.hasPrevious();
+            Sort sort = per.getSort();    // 정렬 정보 에코백
         }
 }

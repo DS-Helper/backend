@@ -3,6 +3,7 @@ package com.project.ds_helper.domain.user.entity;
 import com.project.ds_helper.domain.base.entity.BaseTime;
 import com.project.ds_helper.domain.post.entity.Image;
 import com.project.ds_helper.domain.user.enums.UserRole;
+import com.project.ds_helper.domain.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,10 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRole role = UserRole.USER; // 권한
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private UserType type;
 
     @Column(name = "name")
     private String name; // 이름
