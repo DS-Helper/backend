@@ -37,7 +37,7 @@ public class ReservationService {
     public GetReservationsByReservationStatusResDto getAllReservationByReservationStatus(Authentication authentication, String reservationStatus, int page, int size, String sort, String sortBy) {
 
         String userId = userUtil.extractUserId(authentication);
-        ReservationStatus _reservationStatus = ReservationStatus.findStatusByString(reservationStatus);
+        ReservationStatus _reservationStatus = reservationStatus.equals("")? ReservationStatus.findStatusByString(reservationStatus) : null;
         Pageable pageRequest = PageRequest.of(page, size, sort.equalsIgnoreCase("desc")? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
 
         Page<PersonalReservation> personalReservations = personalReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus, pageRequest);
