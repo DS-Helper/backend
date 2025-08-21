@@ -105,7 +105,7 @@ public class UserService {
         String accessToken = jwtUtil.generateAccessToken(userId, role, type);
         String refreshToken = jwtUtil.generateRefreshToken(userId, role, type);
 
-        stringRedisTemplate.opsForValue().set(RedisKey.REFRESH_TOKEN.getRedisRefreshTokenKey(userId), refreshToken);
+        stringRedisTemplate.opsForValue().set(jwtUtil.toRedisRefreshTokenKey(userId), refreshToken);
 
         cookieUtil.generateAccessTokenCookie(accessToken);
         cookieUtil.generateRefreshTokenCookie(refreshToken);
