@@ -34,22 +34,22 @@ public class ReservationService {
     /***
      * 요청 상태별 전체 예약 조회 (개인 / 기관)
      * */
-    public GetReservationsByReservationStatusResDto getAllReservationByReservationStatus(Authentication authentication, String reservationStatus, int page, int size, String sort, String sortBy) {
-
-        String userId = userUtil.extractUserId(authentication);
-        ReservationStatus _reservationStatus = reservationStatus.equals("")? ReservationStatus.findStatusByString(reservationStatus) : null;
-        Pageable pageRequest = PageRequest.of(page, size, sort.equalsIgnoreCase("desc")? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
-
-        Page<PersonalReservation> personalReservations = personalReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus, pageRequest);
-        Page<OrganizationReservation> organizationReservations  = organizationReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus, pageRequest);
-        log.info("personalReservations size : {}, organizationReservations size : {} selected successfully", personalReservations.getTotalElements(), organizationReservations.getTotalElements());
-
-        List<Object> reservations = new ArrayList<>();
-        personalReservations.stream().peek(reservation -> reservations.add(new GetReservationsByReservationStatusResDto));
-
-
-        return new GetReservationsByReservationStatusResDto(reservations,  );
-
-        return new GetReservationsByReservationStatusResDto(personalReservations, organizationReservations);
-    }
+//    public GetReservationsByReservationStatusResDto getAllReservationByReservationStatus(Authentication authentication, String reservationStatus, int page, int size, String sort, String sortBy) {
+//
+//        String userId = userUtil.extractUserId(authentication);
+//        ReservationStatus _reservationStatus = reservationStatus.equals("")? ReservationStatus.findStatusByString(reservationStatus) : null;
+//        Pageable pageRequest = PageRequest.of(page, size, sort.equalsIgnoreCase("desc")? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
+//
+//        Page<PersonalReservation> personalReservations = personalReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus, pageRequest);
+//        Page<OrganizationReservation> organizationReservations  = organizationReservationRepository.findAllByUser_IdAndReservationStatus(userId, _reservationStatus, pageRequest);
+//        log.info("personalReservations size : {}, organizationReservations size : {} selected successfully", personalReservations.getTotalElements(), organizationReservations.getTotalElements());
+//
+//        List<Object> reservations = new ArrayList<>();
+//        personalReservations.stream().peek(reservation -> reservations.add(new GetReservationsByReservationStatusResDto));
+//
+//
+//        return new GetReservationsByReservationStatusResDto(reservations,  );
+//
+//        return new GetReservationsByReservationStatusResDto(personalReservations, organizationReservations);
+//    }
 }

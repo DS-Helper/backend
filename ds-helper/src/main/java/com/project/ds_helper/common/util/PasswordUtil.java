@@ -11,4 +11,9 @@ public class PasswordUtil {
     BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    public boolean isPasswordMatch(String password, String passwordCheck){
+        if(password.isBlank() || passwordCheck.isBlank()){return false;}
+        return password.equals(passwordCheck);
+    }
 }

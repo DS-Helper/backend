@@ -16,6 +16,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -78,11 +79,14 @@ public class S3Util {
      * 복수개 이미지 업로드
      * **/
 
-    public void uploadImages(List<S3ImageUploadReqDto> imageFiles) throws IOException {
+    public List<String> uploadImages(List<S3ImageUploadReqDto> imageFiles) throws IOException {
+        // 이미지 여부 확인
         if (imageFiles.isEmpty()) {
             throw new IllegalArgumentException("파일이 없습니다.");
         }
 
+        List<String> urls = new ArrayList<>();
+        // s3 이미지 요청 빌드
         for(S3ImageUploadReqDto imageFile : imageFiles){
             PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(bucket)
@@ -90,11 +94,15 @@ public class S3Util {
                     .contentType(imageFile.getContentType())
                     .acl("public-read") // 공개 버킷이면
                     .build();
-
+            // 이미지 업로드
             if(!s3Client.putObject(request, software.amazon.awssdk.core.sync.RequestBody.fromBytes(imageFile.getBytes())).sdkHttpResponse().isSuccessful()){
                 throw new IOException("S3 이미지 저장 실패");
             }
+            // 이미지 url
+            urls.add(request.key());
         }
+
+        return urls;
     }
 
 

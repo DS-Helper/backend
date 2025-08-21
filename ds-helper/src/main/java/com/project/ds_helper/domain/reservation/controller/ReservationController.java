@@ -30,15 +30,15 @@ public class ReservationController {
      * 
      * 요청 상태별 전체 개인 & 기관 예약 조회
      * */
-    @Tag(name = "예약")
-    @Operation(summary = "호출 상태별 전체 개인 & 기관 예약 조회")
-    @GetMapping("/reservation-status")
-    public ResponseEntity<GetReservationsByReservationStatusResDto> getAllReservationByReservationStatus(Authentication authentication,
-                                                                                                         @RequestParam(name = "reservation_status") String reservationStatus,
-                                                                                                         @RequestParam(defaultValue = "0", name = "page") int page,
-                                                                                                         @RequestParam(defaultValue = "10", name = "size") int size,
-                                                                                                         @RequestParam(defaultValue = "desc", name = "sort") String sort,
-                                                                                                         @RequestParam(defaultValue = "createdAt", name = "sort_by") String sortBy){
-        return new ResponseEntity<GetReservationsByReservationStatusResDto>(reservationService.getAllReservationByReservationStatus(authentication, reservationStatus, page, size, sort, sortBy), HttpStatus.OK);
-    }
+//    @Tag(name = "예약")
+//    @Operation(summary = "호출 상태별 전체 개인 & 기관 예약 조회")
+//    @GetMapping("/reservation-status")
+//    public ResponseEntity<GetReservationsByReservationStatusResDto> getAllReservationByReservationStatus(Authentication authentication,
+//                                                                                                         @RequestParam(name = "reservation_status") String reservationStatus,
+//                                                                                                         @RequestParam(defaultValue = "0", name = "page") int page,
+//                                                                                                         @RequestParam(defaultValue = "10", name = "size") int size,
+//                                                                                                         @RequestParam(defaultValue = "desc", name = "sort") String sort,
+//                                                                                                         @RequestParam(defaultValue = "createdAt", name = "sort_by") String sortBy){
+//        return new ResponseEntity<GetReservationsByReservationStatusResDto>(reservationService.getAllReservationByReservationStatus(authentication, reservationStatus, page, size, sort, sortBy), HttpStatus.OK);
+//    }
 }

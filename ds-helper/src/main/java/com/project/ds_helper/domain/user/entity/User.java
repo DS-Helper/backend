@@ -7,6 +7,7 @@ import com.project.ds_helper.domain.user.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,14 +31,18 @@ public class User extends BaseTime {
     @Column(name = "email", unique = true)
     private String email; // 이메일
 
+    @Column(name = "password")
+    private String password; // 비밀번호
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRole role = UserRole.USER; // 권한
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private UserType type;
+    private UserType type = UserType.PERSONAL; // 권한
 
     @Column(name = "name")
     private String name; // 이름
@@ -72,5 +77,4 @@ public class User extends BaseTime {
     @Builder.Default
     @Column(name = "naver_oauth_connected")
     private boolean naverOauthConnected = false; // 네이버 소셜 회원가입 여부
-
 }

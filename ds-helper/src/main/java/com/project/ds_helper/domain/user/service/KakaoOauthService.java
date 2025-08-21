@@ -8,6 +8,7 @@ import com.project.ds_helper.domain.user.dto.response.KakaoUserResponse;
 import com.project.ds_helper.domain.user.entity.KakaoOauth;
 import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.enums.UserRole;
+import com.project.ds_helper.domain.user.enums.UserType;
 import com.project.ds_helper.domain.user.repository.KakaoOauthRepository;
 import com.project.ds_helper.domain.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -141,6 +142,7 @@ public class KakaoOauthService {
                                     .ageRange(ageRange)
                                     .birthday(birthday)
                                     .birthyear(birthyear)
+                                    .type(UserType.PERSONAL)
                                     .build();
                             log.info("newUser is built");
 
