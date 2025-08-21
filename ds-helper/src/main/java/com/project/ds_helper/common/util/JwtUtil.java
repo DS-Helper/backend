@@ -1,6 +1,8 @@
 package com.project.ds_helper.common.util;
 
+import com.project.ds_helper.common.enums.JwtTokenType;
 import com.project.ds_helper.domain.user.enums.UserRole;
+import com.project.ds_helper.domain.user.enums.UserType;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
@@ -46,11 +48,17 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload().get("role", String.class);
     }
 
+    /** 유저 권한 획득 **/
+    public String getType(String token){
+        return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload().get("type", String.class);
+    }
+
     /** AccessToken 발급  **/
-    public String generateAccessToken(String userId, UserRole userRole){
+    public String generateAccessToken(String userId, String userRole, String userType){
         return Jwts.builder()
                 .claim("id", userId)
                 .claim("role", userRole)
+                .claim("type", userType)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(SECRET_KEY)
@@ -58,14 +66,20 @@ public class JwtUtil {
     }
 
     /** RefreshToken 발급  **/
-    public String generateRefreshToken(String userId, UserRole userRole){
+    public String generateRefreshToken(String userId, String userRole, String userType){
         return Jwts.builder()
                 .claim("id", userId)
                 .claim("role", userRole)
+                .claim("type", userType)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(SECRET_KEY)
                 .compact();
+    }
+
+    /** redis에 저장할 refresh token key 값 생성 **/
+    public String toRedisRefreshTokenKey(String userId){
+        return String.format("%s_%s", userId, JwtTokenType.REFRESH_TOKEN_NAME.getTokenName());
     }
 
 }

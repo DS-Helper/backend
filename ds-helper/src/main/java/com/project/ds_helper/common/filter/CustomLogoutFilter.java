@@ -59,6 +59,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
             printWriter.close();
         }
 
-        httpServletResponse.setStatus(204);
+        httpServletResponse.setStatus(200);
     }
 }

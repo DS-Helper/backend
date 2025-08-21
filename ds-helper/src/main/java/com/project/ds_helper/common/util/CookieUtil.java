@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CookieUtil {
 
-    public static Cookie generateAccessTokenCookie(String accessToken){
+    public Cookie generateAccessTokenCookie(String accessToken){
         Cookie cookie = new Cookie(JwtTokenType.ACCESS_TOKEN_NAME.getTokenName(), accessToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
@@ -18,7 +18,7 @@ public class CookieUtil {
         return cookie;
     }
 
-    public static Cookie generateRefreshTokenCookie(String refreshToken){
+    public Cookie generateRefreshTokenCookie(String refreshToken){
         Cookie cookie = new Cookie(JwtTokenType.REFRESH_TOKEN_NAME.getTokenName(), refreshToken);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
@@ -26,7 +26,7 @@ public class CookieUtil {
         return cookie;
     }
 
-    public static String getAuthToken(HttpServletRequest httpServletRequest){
+    public String getAuthToken(HttpServletRequest httpServletRequest){
         Cookie[] cookies = httpServletRequest.getCookies();
         for(Cookie cookie : cookies){
             if(cookie.getName().equals(HttpHeaders.AUTHORIZATION)){

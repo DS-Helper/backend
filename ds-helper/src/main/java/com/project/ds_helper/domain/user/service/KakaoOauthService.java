@@ -47,18 +47,20 @@ public class KakaoOauthService {
         private final WebClient kakaoOauthWebClient;
         private final RestTemplate restTemplate;
         private final JwtUtil jwtUtil;
+        private final CookieUtil cookieUtil;
         private final KakaoOauthRepository kakaoOauthRepository;
         private final UserRepository userRepository;
 
         public KakaoOauthService(@Qualifier("kakaoOauthWebClient") WebClient kakaoOauthWebClient,
 //                                @Qualifier("kakaoOauthRestTemplate") RestTemplate restTemplate,
                                  RestTemplate restTemplate,
-                                 JwtUtil jwtUtil,
+                                 JwtUtil jwtUtil, CookieUtil cookieUtil,
                                  KakaoOauthRepository kakaoOauthRepository,
                                  UserRepository userRepository){
             this.kakaoOauthWebClient = kakaoOauthWebClient;
             this.restTemplate = restTemplate;
             this.jwtUtil = jwtUtil;
+            this.cookieUtil = cookieUtil;
             this.kakaoOauthRepository = kakaoOauthRepository;
             this.userRepository = userRepository;
         }
@@ -123,11 +125,12 @@ public class KakaoOauthService {
                             // 토큰 발급을 위한 userId, userRole 획득
                             KakaoOauth kakaoOauth = optionalKakaoOauth.get();
                             String userId = kakaoOauth.getUser().getId();
-                            UserRole userRole = kakaoOauth.getUser().getRole();
+                            String userRole = kakaoOauth.getUser().getRole().name();
+                            String userType = kakaoOauth.getUser().getType().name();
                             log.info("userId : {}, userRole : {}", userId, userRole);
 
                             // jwt 토큰 발급 및 쿠키 저장
-                            generateJwtTokenAndPutInCookie(httpServletResponse, userId, userRole);
+                            generateJwtTokenAndPutInCookie(httpServletResponse, userId, userRole, userType);
 
                         }else {
                             // Email 기반 로컬 회원가입 여부 조회
@@ -164,11 +167,12 @@ public class KakaoOauthService {
 
                             // jwt token 발급
                             String userId = user.getId();
-                            UserRole userRole = user.getRole();
-                            log.info("userId : {}. userRole : {}", userId, userRole);
+                            String userRole = user.getRole().name();
+                            String userType = user.getType().name();
+                            log.info("userId : {}. userRole : {}, userType : {}", userId, userRole, userType);
 
                             // jwt 토큰 발급 및 쿠키 저장
-                            generateJwtTokenAndPutInCookie(httpServletResponse, userId, userRole);
+                            generateJwtTokenAndPutInCookie(httpServletResponse, userId, userRole, userType);
                         }
     }
 
@@ -211,15 +215,15 @@ public class KakaoOauthService {
     /**
      * jwt token 발급 후 쿠키에 저장하는 메소드
      * **/
-    public void generateJwtTokenAndPutInCookie(HttpServletResponse httpServletResponse, String userId, UserRole userRole){
+    public void generateJwtTokenAndPutInCookie(HttpServletResponse httpServletResponse, String userId, String userRole, String userType){
         // jwt 토큰 생성
-        String accessToken = jwtUtil.generateAccessToken(userId, userRole);
-        String refreshToken = jwtUtil.generateRefreshToken(userId, userRole);
+        String accessToken = jwtUtil.generateAccessToken(userId, userRole, userType);
+        String refreshToken = jwtUtil.generateRefreshToken(userId, userRole, userType);
         log.info("accessToken : {}, refreshToken : {}", accessToken, refreshToken);
 
         // 쿠키에 토큰 추가
-        httpServletResponse.addCookie(CookieUtil.generateAccessTokenCookie(accessToken));
-        httpServletResponse.addCookie(CookieUtil.generateRefreshTokenCookie(refreshToken));
+        httpServletResponse.addCookie(cookieUtil.generateAccessTokenCookie(accessToken));
+        httpServletResponse.addCookie(cookieUtil.generateRefreshTokenCookie(refreshToken));
         log.info("jwt token is put in cookie");
     }
     

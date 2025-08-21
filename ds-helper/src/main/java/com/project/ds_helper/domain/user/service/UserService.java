@@ -1,9 +1,13 @@
 package com.project.ds_helper.domain.user.service;
 
 import com.project.ds_helper.common.dto.request.S3ImageUploadReqDto;
+import com.project.ds_helper.common.redis.RedisKey;
+import com.project.ds_helper.common.util.CookieUtil;
+import com.project.ds_helper.common.util.JwtUtil;
 import com.project.ds_helper.common.util.PasswordUtil;
 import com.project.ds_helper.domain.post.util.S3Util;
 import com.project.ds_helper.domain.user.dto.request.OrganizationJoinReqDto;
+import com.project.ds_helper.domain.user.dto.request.OrganizationLoginReqDto;
 import com.project.ds_helper.domain.user.entity.Organization;
 import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.enums.UserType;
@@ -13,6 +17,8 @@ import io.jsonwebtoken.security.Password;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,6 +33,10 @@ public class UserService {
     private final OrganizationRepository organizationRepository;
     private final PasswordUtil passwordUtil;
     private final S3Util s3Util;
+    private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final StringRedisTemplate stringRedisTemplate;
 
     /**
      * 기관 회원가입
@@ -71,5 +81,33 @@ public class UserService {
 
         organizationRepository.save(organization);
         log.info("Organization Saved Successfully");
+    }
+
+    /**
+     * 기관 로그인
+     * **/
+    public void organizationLogin(@Valid OrganizationLoginReqDto dto) {
+
+        String email = dto.getEmail();
+        String password = dto.getPassword();
+        log.info("email : {}, password : {}", email, password);
+
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Organization Not Found"));
+        if(user.getType().equals(UserType.ORGANIZATION)){ throw new RuntimeException("Not Organization"); }
+
+        if(user.getPassword().equals(bCryptPasswordEncoder.encode(password))){throw new IllegalArgumentException("Wrong Password");}
+
+        String userId = user.getId();
+        String role = user.getRole().name();
+        String type = user.getType().name();
+        log.info("userId : {}, role : {}, type : {}", user, role, type);
+
+        String accessToken = jwtUtil.generateAccessToken(userId, role, type);
+        String refreshToken = jwtUtil.generateRefreshToken(userId, role, type);
+
+        stringRedisTemplate.opsForValue().set(RedisKey.REFRESH_TOKEN.getRedisRefreshTokenKey(userId), refreshToken);
+
+        cookieUtil.generateAccessTokenCookie(accessToken);
+        cookieUtil.generateRefreshTokenCookie(refreshToken);
     }
 }

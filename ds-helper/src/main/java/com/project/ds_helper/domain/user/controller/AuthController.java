@@ -1,6 +1,7 @@
 package com.project.ds_helper.domain.user.controller;
 
 import com.project.ds_helper.domain.user.dto.request.OrganizationJoinReqDto;
+import com.project.ds_helper.domain.user.dto.request.OrganizationLoginReqDto;
 import com.project.ds_helper.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,11 @@ public class AuthController {
     public ResponseEntity<?> organizationJoin(@RequestBody @Valid OrganizationJoinReqDto dto) throws IOException {
         userService.organizationJoin(dto);
         return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/login/organization")
+    public ResponseEntity<?> organizationLogin(@RequestBody @Valid OrganizationLoginReqDto dto) throws IOException {
+        userService.organizationLogin(dto);
+        return ResponseEntity.ok().build();
     }
 }

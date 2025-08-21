@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.ds_helper.common.util.CookieUtil;
 import com.project.ds_helper.common.util.JwtUtil;
 import com.project.ds_helper.domain.user.dto.CustomUserDetails;
+import com.project.ds_helper.domain.user.dto.request.OrganizationLoginReqDto;
+import com.project.ds_helper.domain.user.entity.User;
 import com.project.ds_helper.domain.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,6 +25,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.server.ServerErrorException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,7 +50,7 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter { 
                              CookieUtil cookieUtil,
                              BCryptPasswordEncoder encoder,
                              @Qualifier(value = "CustomStringRedisTemplate") StringRedisTemplate redisTemplate, UserRepository userRepository, ObjectMapper objectMapper) {
-        super("/api/v1/auth/login");
+        super("/auth/login/organization");
         setAuthenticationManager(authenticationManager);
 //            super(DEFAULT_ANT_PATH_REQUEST_MATCHER.getPattern());
         this.setAuthenticationManager(authenticationManager);
@@ -68,10 +71,10 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter { 
         if (this.postOnly && !request.getMethod().equalsIgnoreCase(HttpMethod.POST.name())) {
             throw new AuthenticationServiceException("Unsupported Method : " + request.getMethod());
         } else {
-            LocalLoginRequestDto loginRequestDTO;
+            OrganizationLoginReqDto loginRequestDTO;
             try {
                 /** JSON 파싱 **/
-                loginRequestDTO = objectMapper.readValue(request.getInputStream(), LocalLoginRequestDto.class);
+                loginRequestDTO = objectMapper.readValue(request.getInputStream(), OrganizationLoginReqDto.class);
                 log.info("loginRequestDTO successfully parsed");
             } catch (IOException e) {
                 throw new RuntimeException("[Login Filter] Parsing Failed : ", e);
@@ -102,12 +105,16 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter { 
         // 유저 정보 획득 (UsernamePasswordAuthenticationToken이 authResult에 담김)
         CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
         String userId = customUserDetails.getId();
-        String role = customUserDetails.getRole();
-        log.info("userId : {}, role : {}", userId, role );
+        String role = customUserDetails.getRole().name();
+
+        User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User Not Found"));
+        String type = user.getType().name();
+
+        log.info("userId : {}, role : {}, type : {}", userId, role, type);
 
         // jwt token 발급
-        String accessToken = jwtUtil.generateAccessToken(userId ,role);
-        String refreshToken = jwtUtil.generateRefreshToken(userId, role);
+        String accessToken = jwtUtil.generateAccessToken(userId ,role, type);
+        String refreshToken = jwtUtil.generateRefreshToken(userId, role, type);
         log.info("accessToken : {}, \n refreshToken : {}", accessToken, refreshToken);
 
         // refresh token redis 저장 (id_tokenName)
@@ -119,9 +126,9 @@ public class CustomLoginFilter extends AbstractAuthenticationProcessingFilter { 
         response.setCharacterEncoding("UTF-8");
 
         // jwt token은 cookie에 httponly, secure 적용을 기준으로 개발 했습니다.
-        response.addCookie(cookieUtil.generateNewAccessTokenCookie(accessToken));
-        response.addCookie(cookieUtil.generateNewRefreshTokenCookie(accessToken));
-        response.addCookie(cookieUtil.generateNewIsLoggedInCookie());
+        response.addCookie(cookieUtil.generateAccessTokenCookie(accessToken));
+        response.addCookie(cookieUtil.generateRefreshTokenCookie(accessToken));
+//        response.addCookie(cookieUtil.generateIsLoggedInCookie());
         log.info("Cookie Set Successfully");
 
         response.setStatus(200);

@@ -43,33 +43,33 @@ public record GetReservationsByReservationStatusResDto(
 
     }
 
-        public static Reservation fromOrgReservationtoReservation(OrganizationReservation organizationReservation){
-            return Reservation.builder()
-                    .organizationReservationId(organizationReservation.getId())
-                    .organizationName(organizationReservation.getOrganizationName())
-                    .reservationHolderId(organizationReservation.getUser().getId())
-                    .reservationHolder(organizationReservation.getName())
-                    .reservationPhoneNumber(organizationReservation.getPhoneNumber())
-                    .visitDate(organizationReservation.getVisitDate())
-                    .startTime(organizationReservation.getStartTime())
-                    .endTime(organizationReservation.getEndTime())
-                    .address(organizationReservation.getAddress())
-                    .requirement(organizationReservation.getRequirement())
-                    .recipientGender(organizationReservation.getRecipientGender().getKorean())
-                    .recipientNumber(organizationReservation.getRecipientNumber())
-                    .reservationStatus(organizationReservation.getReservationStatus().getKorean())
-                    .build();
-        }
+//        public static Reservation fromOrgReservationtoReservation(OrganizationReservation organizationReservation){
+//            return Reservation.builder()
+//                    .organizationReservationId(organizationReservation.getId())
+//                    .organizationName(organizationReservation.getOrganizationName())
+//                    .reservationHolderId(organizationReservation.getUser().getId())
+//                    .reservationHolder(organizationReservation.getName())
+//                    .reservationPhoneNumber(organizationReservation.getPhoneNumber())
+//                    .visitDate(organizationReservation.getVisitDate())
+//                    .startTime(organizationReservation.getStartTime())
+//                    .endTime(organizationReservation.getEndTime())
+//                    .address(organizationReservation.getAddress())
+//                    .requirement(organizationReservation.getRequirement())
+//                    .recipientGender(organizationReservation.getRecipientGender().getKorean())
+//                    .recipientNumber(organizationReservation.getRecipientNumber())
+//                    .reservationStatus(organizationReservation.getReservationStatus().getKorean())
+//                    .build();
+//        }
 
-        public static PageResDto toPageResDto(Page<PersonalReservation> per, Page<OrganizationReservation> org){
-            int page = per.getNumber(); // 0-based (Slice일 땐 호출자가 0 고정으로 넣어도 OK)
-            int size = per.getSize();
-            long totalElements = per.getTotalElements();  // Slice면 -1 또는 0
-            int totalPages = per.getTotalPages(); // Slice면 -1
-            boolean first = per.isFirst();
-            boolean last = per.isLast();
-            boolean hasNext = per.hasNext();
-            boolean hasPrevious = per.hasPrevious();
-            Sort sort = per.getSort();    // 정렬 정보 에코백
-        }
+//        public static PageResDto toPageResDto(Page<PersonalReservation> per, Page<OrganizationReservation> org){
+//            int page = per.getNumber(); // 0-based (Slice일 땐 호출자가 0 고정으로 넣어도 OK)
+//            int size = per.getSize();
+//            long totalElements = per.getTotalElements();  // Slice면 -1 또는 0
+//            int totalPages = per.getTotalPages(); // Slice면 -1
+//            boolean first = per.isFirst();
+//            boolean last = per.isLast();
+//            boolean hasNext = per.hasNext();
+//            boolean hasPrevious = per.hasPrevious();
+//            Sort sort = per.getSort();    // 정렬 정보 에코백
+//        }
 }
