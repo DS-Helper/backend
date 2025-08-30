@@ -18,11 +18,11 @@ env:
   EC2_KEY: ${{secrets.EC2_KEY}} # EC2 Private Key
   
   # Path  
-  ROOT_PATH: /home/runner/work/DS-Helper/backend
+  ROOT_PATH: /home/runner/work/backend/backend
   PEM_KEY_PATH: /home/runner/work/backend/backend/key.pem
-  PROJECT_PATH: /home/runner/work/backend/backend/lucid
-  BUILD_PATH: /home/runner/work/backend/backend/lucid/build/libs
-  JAR_PATH: /home/runner/work/backend/backend/lucid/build/libs/lucid.jar
+  PROJECT_PATH: /home/runner/work/backend/backend/ds-helper
+  BUILD_PATH: /home/runner/work/backend/backend/ds-helper/build/libs
+  JAR_PATH: /home/runner/work/backend/backend/ds-helper/build/libs/dshelper.jar
 
 # 실행 되는 jobs
 jobs: 
@@ -61,19 +61,19 @@ jobs:
         echo 현재 위치 확인
         pwd
         echo PEM 키 생성하기
-        echo "$EC2_KEY" > $PEM_KEY_PATH  # /home/runner/work/backend/backend/key.pem
+        echo "$EC2_KEY" > $PEM_KEY_PATH  
         echo pem키 생성 후 현재 위치 확인
         pwd
         echo pem키 생성 후 현재 디렉토리 파일 확인
         ls
         echo PEM KEY 권한 설정
-        chmod 600 $PEM_KEY_PATH # /home/runner/work/backend/backend/key.pem 
+        chmod 600 $PEM_KEY_PATH 
         echo Transfer files to EC2 
-        ls $BUILD_PATH # /home/runner/work/backend/backend/lucid/build/libs/
+        ls $BUILD_PATH 
         rsync --info=progress2 -e "ssh -i key.pem -o StrictHostKeyChecking=no" \
-        $JAR_PATH $EC2_USER@$EC2_HOST:/home/ubuntu/ # /home/runner/work/backend/backend/lucid/build/libs/lucid.jar ubuntu@3.36.29.38:/home/ubuntu/
+        $JAR_PATH $EC2_USER@$EC2_HOST:/home/ubuntu/ 
         
-        # SSH into EC2 and restart the application  # /home/runner/work/backend/backend/key.pem
+        # SSH into EC2 and restart the application 
         ssh -i $PEM_KEY_PATH $EC2_USER@$EC2_HOST << 'EOF'
           echo 기존 프로세스 중지
           pkill -f 'java -jar' || true
