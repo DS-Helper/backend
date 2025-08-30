@@ -22,7 +22,7 @@ env:
   PEM_KEY_PATH: /home/runner/work/backend/backend/key.pem
   PROJECT_PATH: /home/runner/work/backend/backend/ds-helper
   BUILD_PATH: /home/runner/work/backend/backend/ds-helper/build/libs
-  JAR_PATH: /home/runner/work/backend/backend/ds-helper/build/libs/dshelper.jar
+  JAR_PATH: /home/runner/work/backend/backend/ds-helper/build/libs/ds-helper.jar
 
 # 실행 되는 jobs
 jobs: 
