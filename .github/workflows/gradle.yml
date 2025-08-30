@@ -78,21 +78,9 @@ jobs:
           echo 기존 프로세스 중지
           pkill -f 'java -jar' || true
           echo 신규 프로세스 실행
-          # > /dev/null 2>&1 
-          # nohup java -jar lucid.jar &
-          nohup java -jar lucid.jar > app.log 2>&1 &
+          nohup java -jar ds-helper.jar > app.log 2>&1 &
           tail -n 100 app.log
         EOF
-        # ssh -i $PEM_KEY_PATH -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-            # "pkill -f 'java -jar' || true && \
-             # nohup java -jar lucid.jar &" 
-             # > /dev/null 2>&1 < /dev/null &"
-        # echo Jar File 실행
-        # ssh -i $PEM_KEY_PATH -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "
-        # cd /home/ubuntu/ && \
-        # pkill -f 'java -jar' || true && \
-        # nohup java -jar lucid.jar > app.log 2>&1 &
-        # "
         
         echo 임시 생성 된 PEM KEY 삭제 
         rm -f $PEM_KEY_PATH
