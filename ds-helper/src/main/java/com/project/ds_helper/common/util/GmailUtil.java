@@ -18,7 +18,7 @@ public class GmailUtil {
     private final StringRedisTemplate stringRedisTemplate;
 
 
-    public GmailUtil(JavaMailSender javaMailSender, @Qualifier("CustomStringRedisTemplate") StringRedisTemplate stringRedisTemplate) {
+    public GmailUtil(JavaMailSender javaMailSender, StringRedisTemplate stringRedisTemplate) {
         this.javaMailSender = javaMailSender;
         this.stringRedisTemplate = stringRedisTemplate;
     }

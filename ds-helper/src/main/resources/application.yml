@@ -14,14 +14,22 @@ spring:
     name:ds-helper
   datasource:
     url: jdbc:mysql://localhost:3306/dshelper
-    username: dshelper
-    password: dshelper
+    username: root
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587           # STARTTLS
+    username: dshelper77@gmail.com
+    password:  dshelper789  # 2단계 인증 + App Password 필수
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 jakarta:
   persistence:
