@@ -13,9 +13,9 @@ spring:
   application:
     name:ds-helper
   datasource:
-    url: jdbc:mysql://localhost:3306/ds-helper
-    username: root
-    password: ""
+    url: jdbc:mysql://localhost:3306/dshelper
+    username: dshelper
+    password: dshelper
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -26,7 +26,7 @@ spring:
 jakarta:
   persistence:
     jdbc:
-      url: jdbc:mysql://localhost:3306/ds_helper
+      url: jdbc:mysql://localhost:3306/dshelper
 
 # swagger
 springdoc:

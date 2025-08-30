@@ -51,8 +51,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if(redisTemplate.delete(jwtUtil.toRedisRefreshTokenKey(userId))){
             httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-
-
             httpServletResponse.setStatus(401);
             PrintWriter printWriter = httpServletResponse.getWriter();
             printWriter.print("Not Logged In User");
