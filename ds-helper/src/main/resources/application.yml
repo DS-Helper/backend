@@ -1,6 +1,6 @@
 server:
   port: 8080
-  url:
+  url: https://www.dshelper.kro.kr
 
 local:
   port: 8080

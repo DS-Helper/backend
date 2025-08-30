@@ -39,9 +39,9 @@ public class SwaggerConfig {
     public OpenAPI api() {
         SecurityScheme apiKey = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
-                .in(SecurityScheme.In.HEADER)
-                .name("Authorization")
-                .scheme("bearer")
+                .in(SecurityScheme.In.COOKIE)
+                .name("accessToken")
+                .scheme("Bearer")
                 .bearerFormat("JWT");
 
         SecurityRequirement securityRequirement = new SecurityRequirement()
